@@ -11,7 +11,7 @@ except:
 try:
 	import nuke
 	from nukescripts import panels
-	import site
+	#import site		# Fix for pysideuic which is not included in Nuke - python 2.7 only
 	runMode = 'nuke'	
 except:
 	pass
@@ -39,7 +39,8 @@ QtType = 'PySide'	# Edit this to switch between PySide and PyQt
 if QtType == 'PySide':
 	from PySide import QtCore, QtGui, QtUiTools
 	if (runMode == 'nuke'):
-		sys.path.append( site.getsitepackages() ) # Fix for pysideuic which is not included in Nuke
+		#sys.path.append( site.getsitepackages() ) 		# Fix for pysideuic which is not included in Nuke - python 2.7 only
+		sys.path.append(r'C:\Python26\Lib\site-packages')	# Fix for pysideuic which is not included in Nuke - Windows only
 	import pysideuic	
 elif QtType == 'PyQt':
 	from PyQt4 import QtCore, QtGui, uic
@@ -136,9 +137,6 @@ class HelloWorld(form, base):
 		"""Super, loadUi, signal connections"""
 		super(HelloWorld, self).__init__(parent)
 
-		self.setObjectName(windowObject)
-		self.setWindowTitle(windowTitle)
-
 		if QtType == 'PySide':
 			print 'Loading UI using PySide'
 			self.setupUi(self)
@@ -148,6 +146,8 @@ class HelloWorld(form, base):
 			print 'Loading UI using PyQt'
 			uic.loadUi(uiFile, self)
 
+		self.setObjectName(windowObject)
+		self.setWindowTitle(windowTitle)
 
 		# I can now access the UI from self directly, regardless of having used PySide or PyQt
 		# Example:
@@ -169,8 +169,11 @@ def runMaya():
 	gui.show()
 
 def runNuke():
-	pane = nuke.getPaneFor('Properties.1')
-	panels.registerWidgetAsPanel('helloWorld', 'Hello World', 'uk.co.thefoundry.NukeTestWindow', True).addToPane(pane) # View pane and add it to panes menu
+	#pane = nuke.getPaneFor('Properties.1')
+	#panels.registerWidgetAsPanel('helloWorld', 'Hello World', 'uk.co.thefoundry.NukeTestWindow', True).addToPane(pane) # View pane and add it to panes menu
+	global gui
+	gui = HelloWorld()
+	gui.show
 
 
 
