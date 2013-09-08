@@ -24,14 +24,6 @@ import xml.etree.ElementTree as xml
 from cStringIO import StringIO	
 
 
-''' Platform info '''
-''' ------------- '''
-platform = ''
-if sys.platform == 'darwin':
-	platform = 'osx'
-elif sys.platform == 'win32':
-	platform = 'windows'
-
 
 ''' PySide or PyQt - that is the question... '''
 ''' ---------------------------------------- '''
