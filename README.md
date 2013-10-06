@@ -1,4 +1,4 @@
-qt-boilerplate-vfx
+pyVFX-boilerplate
 ==================
 
 A boilerplate for creating PyQt/PySide applications running in Maya, Nuke or completely standalone.
@@ -8,4 +8,4 @@ Then just execute boiler.pyw either inside of Nuke, Maya or as standalone. Pleas
 
 The script is setup in such a way that .ui files are loaded the same way whether you use PySide or PyQt which makes it easy to switch back and forth while developing, if necessary.
 
-If you like, you can edit the code to use a preferred Qt for Python, and if it fails to load that it falls back on the other one.
+More information on usage and customization: http://fredrikaverpil.tumblr.com/post/63276257075

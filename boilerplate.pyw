@@ -1,3 +1,7 @@
+# 
+# Author: Fredrik Averpil, fredrik.averpil@gmail.com, http://fredrikaverpil.tumblr.com
+# 
+
 ''' Run mode '''
 ''' ------------- '''
 runMode = 'standalone'
@@ -11,7 +15,6 @@ except:
 try:
 	import nuke
 	from nukescripts import panels
-	#import site		# Fix for pysideuic which is not included in Nuke - python 2.7 only
 	runMode = 'nuke'	
 except:
 	pass
@@ -25,20 +28,28 @@ from cStringIO import StringIO
 
 
 
-''' PySide or PyQt - that is the question... '''
-''' ---------------------------------------- '''
-QtType = 'PySide'	# Edit this to switch between PySide and PyQt
+
+''' PySide or PyQt '''
+''' --------------'''
+QtType = 'PySide'																# Edit this to switch between PySide and PyQt
+
 if QtType == 'PySide':
 	from PySide import QtCore, QtGui, QtUiTools
 	if (runMode == 'nuke'):
-		#sys.path.append( site.getsitepackages() ) 		# Fix for pysideuic which is not included in Nuke - python 2.7 only
-		sys.path.append(r'C:\Python26\Lib\site-packages')	# Fix for pysideuic which is not included in Nuke - Windows only
+		if 'win' in sys.platform:
+			sys.path.append(r'C:/Python26/Lib/site-packages')					# Edit this to point to the path containing the pysideuic module on Windows
+		elif 'linux' in sys.platform:
+			sys.path.append(r'/usr/lib/python2.6/dist-packages')				# Edit this to point to the path containing the pysideuic module on Linux
+		elif 'darwin' in sys.platform:
+			sys.path.append(r'/Library/Python/2.6/site-packages/')				# Edit this to point to the path containing the pysideuic module on OS X
 	import pysideuic	
 elif QtType == 'PyQt':
 	from PyQt4 import QtCore, QtGui, uic
 	import sip
 
 
+''' Inits '''
+sys.dont_write_bytecode = True
 
 ''' Variables '''
 print 'This app is now using ' + QtType
@@ -48,10 +59,10 @@ windowObject = 'helloWorld'
 
 
 
-class PyQtPySideFixer(QtGui.QMainWindow):
+class PyQtFixer(QtGui.QMainWindow):
 	def __init__(self, parent=None):
 		"""Super, loadUi, signal connections"""
-		super(PyQtPySideFixer, self).__init__(parent)
+		super(PyQtFixer, self).__init__(parent)
 		print 'Making a detour (hack), necessary for when using PyQt'
 
 
@@ -77,7 +88,7 @@ def loadUiType(uiFile):
 			form_class = frame['Ui_%s'%form_class]
 			base_class = eval('QtGui.%s'%widget_class)
 		elif QtType == 'PyQt':
-			form_class = PyQtPySideFixer
+			form_class = PyQtFixer
 			base_class = QtGui.QMainWindow
 	return form_class, base_class
 form, base = loadUiType(uiFile)
@@ -136,14 +147,14 @@ class HelloWorld(form, base):
 
 		elif QtType == 'PyQt':
 			print 'Loading UI using PyQt'
-			uic.loadUi(uiFile, self)
+			uic.loadUi(uiFile, self)	
 
 		self.setObjectName(windowObject)
 		self.setWindowTitle(windowTitle)
 
-		# I can now access the UI from self directly, regardless of having used PySide or PyQt
+		# Access the UI, regardless of having used PySide or PyQt
 		# Example:
-		self.listWidget.addItem('Hello ... world?')
+		self.listWidget.addItem('Hello world')
 
 
 
@@ -151,6 +162,17 @@ def runStandalone():
 	app = QtGui.QApplication(sys.argv)
 	gui = HelloWorld()
 	gui.show()
+
+	darkorange = False							# Edit this to set the darkorange stylesheet
+	if darkorange:
+		themePath = os.path.join( os.path.dirname(__file__), 'theme' )
+		sys.path.append( themePath )
+		import darkorangeResource
+		stylesheetFilepath = os.path.join( themePath, 'darkorange.stylesheet' )
+		with open( stylesheetFilepath , 'r' ) as shfp:
+			gui.setStyleSheet( shfp.read() )
+		app.setStyle("plastique")
+	
 	sys.exit(app.exec_())
 
 def runMaya():
@@ -158,14 +180,31 @@ def runMaya():
 		cmds.deleteUI(windowObject)
 	global gui
 	gui = HelloWorld( maya_main_window() )
-	gui.show()
+
+	dockedWindow = False						# Edit this to change between docked window and free floating window
+	if dockedWindow:
+		allowedAreas = ['right', 'left']
+		cmds.dockControl( label=windowTitle, area='left', content=windowObject, allowedArea=allowedAreas )
+	else:
+		gui.show() 
 
 def runNuke():
-	#pane = nuke.getPaneFor('Properties.1')
-	#panels.registerWidgetAsPanel('helloWorld', 'Hello World', 'uk.co.thefoundry.NukeTestWindow', True).addToPane(pane) # View pane and add it to panes menu
-	global gui
-	gui = HelloWorld()
-	gui.show
+	moduleName = __name__
+	if moduleName == '__main__':
+		moduleName = ''
+	else:
+		moduleName = moduleName + '.'
+
+	dockedWindow = False						# Edit this to change between docked window and free floating window (DOES NOT WORK PROPERLY AT THE MOMENT)
+	if dockedWindow:
+		pane = nuke.getPaneFor('Properties.1')
+		global gui
+		gui = panels.registerWidgetAsPanel( moduleName + 'HelloWorld' , windowTitle, ('uk.co.thefoundry.'+windowObject+'Window'), True).addToPane(pane) # View pane and add it to panes menu
+	else:
+		global gui
+		gui = HelloWorld()
+		gui.show()
+
 
 
 
