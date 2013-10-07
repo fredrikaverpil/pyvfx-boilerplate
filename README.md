@@ -8,4 +8,4 @@ Then just execute boiler.pyw either inside of Nuke, Maya or as standalone. Pleas
 
 The script is setup in such a way that .ui files are loaded the same way whether you use PySide or PyQt which makes it easy to switch back and forth while developing, if necessary.
 
-More information on usage and customization: http://fredrikaverpil.tumblr.com/post/63276257075
+More information on usage and customization: https://github.com/fredrikaverpil/pyVFX-boilerplate/wiki
