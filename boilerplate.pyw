@@ -198,8 +198,9 @@ def runNuke():
 	dockedWindow = False						# Edit this to change between docked window and free floating window (DOES NOT WORK PROPERLY AT THE MOMENT)
 	if dockedWindow:
 		pane = nuke.getPaneFor('Properties.1')
+		panel = panels.registerWidgetAsPanel( moduleName + 'HelloWorld' , windowTitle, ('uk.co.thefoundry.'+windowObject+'Window'), True).addToPane(pane) # View pane and add it to panes menu
 		global gui
-		gui = panels.registerWidgetAsPanel( moduleName + 'HelloWorld' , windowTitle, ('uk.co.thefoundry.'+windowObject+'Window'), True).addToPane(pane) # View pane and add it to panes menu
+		gui = panel.customKnob.getObject().widget
 	else:
 		global gui
 		gui = HelloWorld()
