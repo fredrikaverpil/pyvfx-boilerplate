@@ -212,7 +212,9 @@ def runNuke():
 
 if runMode == 'standalone':
 	runStandalone()
+'''
 elif runMode == 'maya':
 	runMaya()
 elif runMode == 'nuke':
 	runNuke()
+'''
