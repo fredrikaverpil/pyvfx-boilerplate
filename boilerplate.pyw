@@ -2,8 +2,45 @@
 # Author: Fredrik Averpil, fredrik.averpil@gmail.com, http://fredrikaverpil.tumblr.com
 # 
 
+''' Imports regardless of Qt type '''
+''' --------------------------------------------------------------------------------------------------------------------------------------------------------- '''
+import os, sys
+import xml.etree.ElementTree as xml
+from cStringIO import StringIO	
+
+
+
+''' CONFIGURATION '''
+''' --------------------------------------------------------------------------------------------------------------------------------------------------------- '''
+
+# General
+QtType = 'PySide'															# Edit this to switch between PySide and PyQt
+sys.dont_write_bytecode = True												# Do not generate .pyc files
+uiFile = os.path.join(os.path.dirname(__file__), "mainWindow.ui")			# The .ui file to load
+windowTitle = 'Hello World'													# The visible title of the window
+windowObject = 'helloWorld'													# The name of the window object
+
+# Standalone settings
+darkorange = True															# Use the 'darkorange' stylesheet
+
+# Maya settings
+launchAsDockedWindow = False												# False = opens as free floating window, True = docks window to Maya UI
+
+# Nuke settings
+launchAsPanel = False														# False = opens as regular window, True = opens as panel
+
+# Site-packages location:
+site_packages_Win = ''														# Location of site-packages containing PySide and pysideuic and/or PyQt and SIP
+site_packages_Linux = ''													# Location of site-packages containing PySide and pysideuic and/or PyQt and SIP
+site_packages_OSX = ''														# Location of site-packages containing PySide and pysideuic and/or PyQt and SIP
+#site_packages_Win = 'C:/Python26/Lib/site-packages'						# Example: Windows 7
+#site_packages_Linux = '/usr/lib/python2.6/site-packages'					# Example: Linux CentOS 6.4
+#site_packages_OSX = '/Library/Python/2.7/site-packages'					# Example: Mac OS X 10.8 Mountain Lion
+
+
+
 ''' Run mode '''
-''' ------------- '''
+''' --------------------------------------------------------------------------------------------------------------------------------------------------------- '''
 runMode = 'standalone'
 try:
 	import maya.cmds as cmds
@@ -20,43 +57,25 @@ except:
 	pass
 
 
-''' Imports regardless of Qt type '''
-''' ------------------------------ '''
-import os, sys
-import xml.etree.ElementTree as xml
-from cStringIO import StringIO	
-
-
-
-
 ''' PySide or PyQt '''
-''' --------------'''
-QtType = 'PySide'																# Edit this to switch between PySide and PyQt
+''' --------------------------------------------------------------------------------------------------------------------------------------------------------- '''
+if (site_packages_Win != '') and ('win' in sys.platform): sys.path.append( site_packages_Win )
+if (site_packages_Linux != '') and ('linux' in sys.platform): sys.path.append( site_packages_Linux )
+if (site_packages_OSX != '') and ('darwin' in sys.platform): sys.path.append( site_packages_OSX )
 
 if QtType == 'PySide':
 	from PySide import QtCore, QtGui, QtUiTools
-	if (runMode == 'nuke'):
-		if 'win' in sys.platform:
-			sys.path.append(r'C:/Python26/Lib/site-packages')					# Edit this to point to the path containing the pysideuic module on Windows
-		elif 'linux' in sys.platform:
-			sys.path.append(r'/usr/lib/python2.6/dist-packages')				# Edit this to point to the path containing the pysideuic module on Linux
-		elif 'darwin' in sys.platform:
-			sys.path.append(r'/Library/Python/2.6/site-packages/')				# Edit this to point to the path containing the pysideuic module on OS X
 	import pysideuic	
 elif QtType == 'PyQt':
 	from PyQt4 import QtCore, QtGui, uic
 	import sip
-
-
-''' Inits '''
-sys.dont_write_bytecode = True
-
-''' Variables '''
 print 'This app is now using ' + QtType
-uiFile = os.path.join(os.path.dirname(__file__), "mainWindow.ui")
-windowTitle = 'Hello World'
-windowObject = 'helloWorld'
 
+
+
+
+''' Auto-setup classes and functions '''
+''' --------------------------------------------------------------------------------------------------------------------------------------------------------- '''
 
 
 class PyQtFixer(QtGui.QMainWindow):
@@ -135,6 +154,10 @@ def maya_main_window():
 
 
 
+
+''' Main class '''
+''' --------------------------------------------------------------------------------------------------------------------------------------------------------- '''
+
 class HelloWorld(form, base):
 	def __init__(self, parent=None):
 		"""Super, loadUi, signal connections"""
@@ -158,12 +181,17 @@ class HelloWorld(form, base):
 
 
 
+
+
+''' Run functions '''
+''' --------------------------------------------------------------------------------------------------------------------------------------------------------- '''
+
 def runStandalone():
 	app = QtGui.QApplication(sys.argv)
+	global gui
 	gui = HelloWorld()
 	gui.show()
 
-	darkorange = False							# Edit this to set the darkorange stylesheet
 	if darkorange:
 		themePath = os.path.join( os.path.dirname(__file__), 'theme' )
 		sys.path.append( themePath )
@@ -181,8 +209,7 @@ def runMaya():
 	global gui
 	gui = HelloWorld( maya_main_window() )
 
-	dockedWindow = False						# Edit this to change between docked window and free floating window
-	if dockedWindow:
+	if launchAsDockedWindow:
 		allowedAreas = ['right', 'left']
 		cmds.dockControl( label=windowTitle, area='left', content=windowObject, allowedArea=allowedAreas )
 	else:
@@ -195,8 +222,7 @@ def runNuke():
 	else:
 		moduleName = moduleName + '.'
 
-	dockedWindow = False						# Edit this to change between docked window and free floating window (DOES NOT WORK PROPERLY AT THE MOMENT)
-	if dockedWindow:
+	if launchAsPanel:
 		pane = nuke.getPaneFor('Properties.1')
 		panel = panels.registerWidgetAsPanel( moduleName + 'HelloWorld' , windowTitle, ('uk.co.thefoundry.'+windowObject+'Window'), True).addToPane(pane) # View pane and add it to panes menu
 		global gui
