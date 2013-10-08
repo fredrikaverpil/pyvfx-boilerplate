@@ -14,25 +14,25 @@ from cStringIO import StringIO
 ''' --------------------------------------------------------------------------------------------------------------------------------------------------------- '''
 
 # General
-QtType = 'PySide'															# Edit this to switch between PySide and PyQt
-sys.dont_write_bytecode = True												# Do not generate .pyc files
-uiFile = os.path.join(os.path.dirname(__file__), "mainWindow.ui")			# The .ui file to load
-windowTitle = 'Hello World'													# The visible title of the window
-windowObject = 'helloWorld'													# The name of the window object
+QtType = 'PySide'										# Edit this to switch between PySide and PyQt
+sys.dont_write_bytecode = True									# Do not generate .pyc files
+uiFile = os.path.join(os.path.dirname(__file__), "mainWindow.ui")				# The .ui file to load
+windowTitle = 'Hello World'									# The visible title of the window
+windowObject = 'helloWorld'									# The name of the window object
 
 # Standalone settings
-darkorange = True															# Use the 'darkorange' stylesheet
+darkorange = True										# Use the 'darkorange' stylesheet
 
 # Maya settings
-launchAsDockedWindow = False												# False = opens as free floating window, True = docks window to Maya UI
+launchAsDockedWindow = False									# False = opens as free floating window, True = docks window to Maya UI
 
 # Nuke settings
-launchAsPanel = False														# False = opens as regular window, True = opens as panel
+launchAsPanel = False										# False = opens as regular window, True = opens as panel
 
 # Site-packages location:
-site_packages_Win = ''														# Location of site-packages containing PySide and pysideuic and/or PyQt and SIP
-site_packages_Linux = ''													# Location of site-packages containing PySide and pysideuic and/or PyQt and SIP
-site_packages_OSX = ''														# Location of site-packages containing PySide and pysideuic and/or PyQt and SIP
+site_packages_Win = ''										# Location of site-packages containing PySide and pysideuic and/or PyQt and SIP
+site_packages_Linux = ''									# Location of site-packages containing PySide and pysideuic and/or PyQt and SIP
+site_packages_OSX = ''										# Location of site-packages containing PySide and pysideuic and/or PyQt and SIP
 #site_packages_Win = 'C:/Python26/Lib/site-packages'						# Example: Windows 7
 #site_packages_Linux = '/usr/lib/python2.6/site-packages'					# Example: Linux CentOS 6.4
 #site_packages_OSX = '/Library/Python/2.7/site-packages'					# Example: Mac OS X 10.8 Mountain Lion
