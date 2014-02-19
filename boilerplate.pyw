@@ -16,12 +16,12 @@ from cStringIO import StringIO
 # General
 QtType = 'PySide'										# Edit this to switch between PySide and PyQt
 sys.dont_write_bytecode = True									# Do not generate .pyc files
-uiFile = os.path.join(os.path.dirname(__file__), "mainWindow.ui")				# The .ui file to load
+uiFile = os.path.join(os.path.dirname(__file__), 'mainWindow.ui')				# The .ui file to load
 windowTitle = 'Hello World'									# The visible title of the window
 windowObject = 'helloWorld'									# The name of the window object
 
 # Standalone settings
-darkorange = True										# Use the 'darkorange' stylesheet
+darkorange = False										# Use the 'darkorange' stylesheet
 
 # Maya settings
 launchAsDockedWindow = False									# False = opens as free floating window, True = docks window to Maya UI
