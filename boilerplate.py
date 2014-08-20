@@ -206,12 +206,14 @@ def runStandalone():
 def runMaya():
 	if cmds.window(windowObject, q=True, exists=True):
 		cmds.deleteUI(windowObject)
+	if cmds.dockControl( 'MayaWindow|'+windowTitle, q=True, ex=True):
+		cmds.deleteUI( 'MayaWindow|'+windowTitle )
 	global gui
 	gui = HelloWorld( maya_main_window() )
 
 	if launchAsDockedWindow:
 		allowedAreas = ['right', 'left']
-		cmds.dockControl( label=windowTitle, area='left', content=windowObject, allowedArea=allowedAreas )
+		cmds.dockControl( windowTitle, label=windowTitle, area='left', content=windowObject, allowedArea=allowedAreas )
 	else:
 		gui.show() 
 
