@@ -28,6 +28,7 @@ launchAsDockedWindow = False									# False = opens as free floating window, Tr
 
 # Nuke settings
 launchAsPanel = False										# False = opens as regular window, True = opens as panel
+parentToNukeMainWindow = True									# True = makes window stay on top of Nuke
 
 # Site-packages location:
 site_packages_Win = ''										# Location of site-packages containing PySide and pysideuic and/or PyQt and SIP
@@ -229,7 +230,10 @@ def runNuke():
 		panel = panels.registerWidgetAsPanel( moduleName + 'HelloWorld' , windowTitle, ('uk.co.thefoundry.'+windowObject+'Window'), True).addToPane(pane) # View pane and add it to panes menu
 		gui = panel.customKnob.getObject().widget
 	else:
-		gui = HelloWorld()
+		if parentToNukeMainWindow:
+			gui = HelloWorld( parent=QtGui.QApplication.activeWindow() )
+		else:
+			gui = HelloWorld()
 		gui.show()
 
 
