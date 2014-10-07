@@ -179,7 +179,10 @@ class HelloWorld(form, base):
 		# Access the UI, regardless of having used PySide or PyQt
 		# Example:
 		self.listWidget.addItem('Hello world')
-
+	
+	def closeEvent(self, event):
+		''' Delete this object when closed.'''
+		self.deleteLater()
 
 
 
@@ -210,12 +213,14 @@ def runMaya():
 	if cmds.dockControl( 'MayaWindow|'+windowTitle, q=True, ex=True):
 		cmds.deleteUI( 'MayaWindow|'+windowTitle )
 	global gui
-	gui = HelloWorld( maya_main_window() )
+	gui = HelloWorld( parent=maya_main_window() )
+	#gui = HelloWorld( parent=QtGui.QApplication.activeWindow() ) # Alternative way of setting parent window
 
 	if launchAsDockedWindow:
 		allowedAreas = ['right', 'left']
 		cmds.dockControl( windowTitle, label=windowTitle, area='left', content=windowObject, allowedArea=allowedAreas )
 	else:
+		#gui.setWindowModality(QtCore.Qt.WindowModal) # Set modality
 		gui.show() 
 
 def runNuke():
@@ -234,6 +239,7 @@ def runNuke():
 			gui = HelloWorld( parent=QtGui.QApplication.activeWindow() )
 		else:
 			gui = HelloWorld()
+		#gui.setWindowModality(QtCore.Qt.WindowModal) # Set modality
 		gui.show()
 
 
