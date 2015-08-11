@@ -13,16 +13,17 @@ from cStringIO import StringIO
 ''' Configuration: Global settings
 --------------------------------------------------------------------------------
 QT_BINDINGS: Edit this to force Qt Bindnings: PySide|PyQt|Auto
-QT_BINDINGS_PATH: Possibility to specify external site-packages location (a neat
-trick is to customize this further to make the boilerplate load different
-site package locations based on e.g. operating system)
+EXTERNAL_SITE_PACKAGES_PATH: Optional, location of site-packages location
+containing PySide and pysideuic and/or PyQt and SIP (a neat trick is to
+customize this further to make the boilerplate load different site package
+locations based on e.g. operating system)
 UI_FILE: Full path to .ui file to load, created by Qt Designer
 WINDOW_TITLE: The visible title of the window
 WINDOW_OBJECT: The name of the window object
 sys.dont_write_bytecode: Skips .pyc file creation, if set to True '''
 
 QT_BINDINGS = 'Auto'
-QT_BINDINGS_PATH = None
+EXTERNAL_SITE_PACKAGES_PATH = None
 UI_FILE = os.path.join(os.path.dirname(__file__), 'main_window.ui')
 WINDOW_TITLE = 'Hello World'
 WINDOW_OBJECT = 'helloWorld'
@@ -84,9 +85,9 @@ except ImportError:
 --------------------------------------------------------------------------------
 '''
 
-if type(QT_BINDINGS_PATH) != type(None):
-	print 'Loading external site-packages from', QT_BINDINGS_PATH
-	sys.path.append( QT_BINDINGS_PATH ) # Load external site-packages
+if type(EXTERNAL_SITE_PACKAGES_PATH) != type(None):
+	print 'Loading external site-packages from', EXTERNAL_SITE_PACKAGES_PATH
+	sys.path.append( EXTERNAL_SITE_PACKAGES_PATH ) # Load external site-packages
 
 if QT_BINDINGS == 'Auto':
 	try:
