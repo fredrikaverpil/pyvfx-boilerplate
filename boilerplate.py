@@ -19,7 +19,8 @@ site package locations based on e.g. operating system)
 UI_FILE: Full path to .ui file to load, created by Qt Designer
 WINDOW_TITLE: The visible title of the window
 WINDOW_OBJECT: The name of the window object
-sys.dont_write_bytecode: Skips .pyc file creation, if set to True'''
+sys.dont_write_bytecode: Skips .pyc file creation, if set to True '''
+
 QT_BINDINGS = 'Auto'
 QT_BINDINGS_PATH = None
 UI_FILE = os.path.join(os.path.dirname(__file__), 'main_window.ui')
@@ -31,7 +32,8 @@ sys.dont_write_bytecode = False
 
 ''' Configuration: Standalone mode
 --------------------------------------------------------------------------------
-MAYA_PALETTE: Uses approximately the same stylesheet as seen in Maya 2015'''
+MAYA_PALETTE: Uses approximately the same stylesheet as seen in Maya 2015 '''
+
 MAYA_PALETTE = False
 
 
@@ -40,7 +42,8 @@ MAYA_PALETTE = False
 --------------------------------------------------------------------------------
 MAYA_LAUNCH_AS_DOCKED_WINDOW:
 False = opens as free floating window
-True = docks window to Maya UI'''
+True = docks window to Maya UI '''
+
 MAYA_LAUNCH_AS_DOCKED_WINDOW = False
 
 
@@ -48,8 +51,8 @@ MAYA_LAUNCH_AS_DOCKED_WINDOW = False
 ''' Configuration: Nuke
 --------------------------------------------------------------------------------
 NUKE_LAUNCH_AS_PANEL: Opens a regular window or a panel
-NUKE_PARENT_TO_NUKE_MAIN_WINDOW: If True, makes window stay on top of Nuke
-'''
+NUKE_PARENT_TO_NUKE_MAIN_WINDOW: If True, makes window stay on top of Nuke '''
+
 NUKE_LAUNCH_AS_PANEL = False
 NUKE_PARENT_TO_NUKE_MAIN_WINDOW = True
 
@@ -58,6 +61,7 @@ NUKE_PARENT_TO_NUKE_MAIN_WINDOW = True
 ''' Run mode
 --------------------------------------------------------------------------------
 '''
+
 RUN_MODE = 'standalone'
 try:
 	import maya.cmds as cmds
@@ -79,6 +83,7 @@ except ImportError:
 ''' Qt Bindnings
 --------------------------------------------------------------------------------
 '''
+
 if type(QT_BINDINGS_PATH) != type(None):
 	print 'Loading external site-packages from', QT_BINDINGS_PATH
 	sys.path.insert( QT_BINDINGS_PATH ) # Load external site-packages
@@ -117,9 +122,9 @@ class PyQtFixer(QtGui.QMainWindow):
 
 def load_ui_type(UI_FILE):
 	'''
-	Pyside lacks the "load_ui_type" command, so we have to convert the ui file to
-	py code in-memory first and then execute it in a special frame to retrieve
-	the form_class.
+	Pyside lacks the "load_ui_type" command, so we have to convert the ui file
+	to py code in-memory first and then execute it in a special frame to
+	retrieve the form_class.
 	'''
 	parsed = xml.parse(UI_FILE)
 	widget_class = parsed.find('widget').get('class')
@@ -191,6 +196,7 @@ def maya_main_window():
 ''' Main class
 --------------------------------------------------------------------------------
 '''
+
 class HelloWorld(form, base):
 	def __init__(self, parent=None):
 		"""Super, loadUi, signal connections"""
@@ -268,8 +274,10 @@ class HelloWorld(form, base):
 
 			# Create a new palette
 			tab_palette = QtGui.QPalette(base_palette)
-			tab_palette.setBrush(QtGui.QPalette.Window, QtGui.QBrush(LIGHT_COLOR))
-			tab_palette.setBrush(QtGui.QPalette.Button, QtGui.QBrush(MID_COLOR))
+			tab_palette.setBrush(   QtGui.QPalette.Window,
+									QtGui.QBrush(LIGHT_COLOR))
+			tab_palette.setBrush(	QtGui.QPalette.Button,
+									QtGui.QBrush(MID_COLOR))
 
 			# Define the widgets that needs tweaking
 			widget_palettes = {}
