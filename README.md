@@ -8,4 +8,6 @@ Then just execute boilerplate.py either inside of Nuke, Maya or as standalone. P
 
 The script is setup in such a way that .ui files are loaded the same way whether you use PySide or PyQt, which is the main reason for why I created this boilerplate.
 
+I've dumped the Maya 2015 QPalette, which can be used if you run your app in Standalone mode, outside of your DCC app. The first step of making a "Pro" app ;)
+
 More information on usage and customization over at the project's wiki: https://github.com/fredrikaverpil/pyVFX-boilerplate/wiki
