@@ -14,7 +14,7 @@ from cStringIO import StringIO
 ''' --------------------------------------------------------------------------------------------------------------------------------------------------------- '''
 
 # General
-QtType = 'PySide'										# Edit this to switch between PySide and PyQt
+_qtBindings = 'PySide'										# Edit this to switch between PySide and PyQt
 sys.dont_write_bytecode = True									# Do not generate .pyc files
 uiFile = os.path.join(os.path.dirname(__file__), 'mainWindow.ui')				# The .ui file to load
 windowTitle = 'Hello World'									# The visible title of the window
@@ -30,15 +30,6 @@ launchAsDockedWindow = False									# False = opens as free floating window, Tr
 launchAsPanel = False										# False = opens as regular window, True = opens as panel
 parentToNukeMainWindow = True									# True = makes window stay on top of Nuke
 
-# Site-packages location:
-site_packages_Win = ''										# Location of site-packages containing PySide and pysideuic and/or PyQt and SIP
-site_packages_Linux = ''									# Location of site-packages containing PySide and pysideuic and/or PyQt and SIP
-site_packages_OSX = ''										# Location of site-packages containing PySide and pysideuic and/or PyQt and SIP
-#site_packages_Win = 'C:/Python26/Lib/site-packages'						# Example: Windows 7
-#site_packages_Linux = '/usr/lib/python2.6/site-packages'					# Example: Linux CentOS 6.4
-#site_packages_OSX = '/Library/Python/2.7/site-packages'					# Example: Mac OS X 10.8 Mountain Lion
-
-
 
 ''' Run mode '''
 ''' --------------------------------------------------------------------------------------------------------------------------------------------------------- '''
@@ -48,32 +39,27 @@ try:
 	import maya.OpenMayaUI as omui
 	import shiboken
 	runMode = 'maya'
-except:
+except ImportError:
 	pass
+
 try:
 	import nuke
 	from nukescripts import panels
 	runMode = 'nuke'	
-except:
+except ImportError:
 	pass
 
 
-''' PySide or PyQt '''
-''' --------------------------------------------------------------------------------------------------------------------------------------------------------- '''
-if (site_packages_Win != '') and ('win' in sys.platform): sys.path.append( site_packages_Win )
-if (site_packages_Linux != '') and ('linux' in sys.platform): sys.path.append( site_packages_Linux )
-if (site_packages_OSX != '') and ('darwin' in sys.platform): sys.path.append( site_packages_OSX )
-
-if QtType == 'PySide':
-	from PySide import QtCore, QtGui, QtUiTools
-	import pysideuic	
-elif QtType == 'PyQt':
-	from PyQt4 import QtCore, QtGui, uic
+try:
+	from PySide import QtGui, QtGui, QtUiTools
+	import pysideuic
+	_qtBindings = 'PySide'
+except ImportError:
+	from PyQt4 import QtGui, QtCore, uic
 	import sip
-print 'This app is now using ' + QtType
-
-
-
+	_qtBindings = 'PyQt'
+finally:
+	print 'This app is now using ' + _qtBindings
 
 ''' Auto-setup classes and functions '''
 ''' --------------------------------------------------------------------------------------------------------------------------------------------------------- '''
@@ -99,7 +85,7 @@ def loadUiType(uiFile):
 		o = StringIO()
 		frame = {}
 
-		if QtType == 'PySide':
+		if _qtBindings == 'PySide':
 			pysideuic.compileUi(f, o, indent=0)
 			pyc = compile(o.getvalue(), '<string>', 'exec')
 			exec pyc in frame
@@ -107,7 +93,7 @@ def loadUiType(uiFile):
 			#Fetch the base_class and form class based on their type in the xml from designer
 			form_class = frame['Ui_%s'%form_class]
 			base_class = eval('QtGui.%s'%widget_class)
-		elif QtType == 'PyQt':
+		elif _qtBindings == 'PyQt':
 			form_class = PyQtFixer
 			base_class = QtGui.QMainWindow
 	return form_class, base_class
@@ -164,12 +150,12 @@ class HelloWorld(form, base):
 		"""Super, loadUi, signal connections"""
 		super(HelloWorld, self).__init__(parent)
 
-		if QtType == 'PySide':
+		if _qtBindings == 'PySide':
 			print 'Loading UI using PySide'
 			self.setupUi(self)
 
 
-		elif QtType == 'PyQt':
+		elif _qtBindings == 'PyQt':
 			print 'Loading UI using PyQt'
 			uic.loadUi(uiFile, self)	
 
