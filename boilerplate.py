@@ -86,7 +86,7 @@ except ImportError:
 
 if type(QT_BINDINGS_PATH) != type(None):
 	print 'Loading external site-packages from', QT_BINDINGS_PATH
-	sys.path.insert( QT_BINDINGS_PATH ) # Load external site-packages
+	sys.path.append( QT_BINDINGS_PATH ) # Load external site-packages
 
 if QT_BINDINGS == 'Auto':
 	try:
