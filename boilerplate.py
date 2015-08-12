@@ -4,7 +4,7 @@
 ''' Imports regardless of Qt type
 --------------------------------------------------------------------------------
 '''
-import os, sys, json
+import os, sys, json, platform
 import xml.etree.ElementTree as xml
 from cStringIO import StringIO
 
@@ -12,18 +12,18 @@ from cStringIO import StringIO
 
 ''' Configuration: Global settings
 --------------------------------------------------------------------------------
-QT_BINDINGS: Edit this to force Qt Bindnings: PySide|PyQt|Auto
-EXTERNAL_SITE_PACKAGES_PATH: Optional, location of site-packages location
-containing PySide and pysideuic and/or PyQt and SIP (a neat trick is to
-customize this further to make the boilerplate load different site package
-locations based on e.g. operating system)
+QT_BINDINGS: Edit this to auto-detect or force Qt Bindnings: Auto|PySide|PyQt
+EXTERNAL_SITE_PACKAGES_PATH_<OS>: Optional, location of site-packages location
+(such as a virtualenv containing PySide and pysideuic and/or PyQt and SIP).
 UI_FILE: Full path to .ui file to load, created by Qt Designer
 WINDOW_TITLE: The visible title of the window
 WINDOW_OBJECT: The name of the window object
 sys.dont_write_bytecode: Skips .pyc file creation, if set to True '''
 
 QT_BINDINGS = 'Auto'
-EXTERNAL_SITE_PACKAGES_PATH = None
+EXTERNAL_SITE_PACKAGES_PATH_WINDOWS = None
+EXTERNAL_SITE_PACKAGES_PATH_LINUX = None
+EXTERNAL_SITE_PACKAGES_PATH_OSX = None
 UI_FILE = os.path.join(os.path.dirname(__file__), 'main_window.ui')
 WINDOW_TITLE = 'Hello World'
 WINDOW_OBJECT = 'helloWorld'
@@ -85,10 +85,22 @@ except ImportError:
 --------------------------------------------------------------------------------
 '''
 
-if type(EXTERNAL_SITE_PACKAGES_PATH) != type(None):
-	print 'Loading external site-packages from', EXTERNAL_SITE_PACKAGES_PATH
-	sys.path.append( EXTERNAL_SITE_PACKAGES_PATH ) # Load external site-packages
+# Load external site-packages
+def append_to_sys_path(path):
+	sys.path.append( path )
+	print 'Using external site-packages at', path
 
+if ('windows' in platform.system().lower() and
+	type(EXTERNAL_SITE_PACKAGES_PATH_WINDOWS) != type(None) ):
+	append_to_sys_path(path=EXTERNAL_SITE_PACKAGES_PATH_WINDOWS)
+elif ('linux' in platform.system().lower() and
+	type(EXTERNAL_SITE_PACKAGES_PATH_LINUX) != type(None) ):
+	append_to_sys_path(path=EXTERNAL_SITE_PACKAGES_PATH_LINUX)
+elif ('darwin' in platform.system().lower() and
+	type(EXTERNAL_SITE_PACKAGES_PATH_OSX) != type(None) ):
+	append_to_sys_path(path=EXTERNAL_SITE_PACKAGES_PATH_OSX)
+
+# Load Qt bindings
 if QT_BINDINGS == 'Auto':
 	try:
 		from PySide import QtGui, QtGui, QtUiTools
@@ -105,6 +117,7 @@ elif QT_BINDINGS == 'PyQt':
 	from PyQt4 import QtGui, QtCore, uic
 	import sip
 
+# Summary
 print	('This app is now running in ' + RUN_MODE + ' mode,'
 		' using ' + QT_BINDINGS + ' Qt bindings')
 
@@ -188,7 +201,8 @@ def wrap_instance(ptr, base=None):
 
 
 def maya_main_window():
-	''' Returns the main Maya window. This works for both PySide and PyQt. '''
+	''' Returns the main Maya window. This works for both PySide and PyQt
+	since it uses the custom wrap_instance function. '''
 	main_window_ptr = omui.MQtUtil.mainWindow()
 	return wrap_instance( long( main_window_ptr ), QtGui.QWidget )
 
