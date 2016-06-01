@@ -5,7 +5,7 @@ A boilerplate for creating PyQt4/PySide and PyQt5/PySide2 applications running i
 
 ## Documentation
 
-### Version 2.0
+### Version 2.x
 
 #### Changes from 1.0
 
