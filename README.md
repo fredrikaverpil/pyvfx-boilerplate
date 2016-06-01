@@ -16,7 +16,7 @@ A boilerplate for creating PyQt4/PySide and PyQt5/PySide2 applications running i
 - Maya palette removed (will be back soon).
 - Git repo name change: all lowercase.
 - Pretty much PEP8 compliant.
-- Now comes with Qt.WindowStaysOnTopHint out of the box.
+- Now comes with `Qt.WindowStaysOnTopHint` out of the box.
 - Can be run in multiple ways (see examples).
 
 <br>
