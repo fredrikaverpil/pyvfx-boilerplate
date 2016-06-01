@@ -145,8 +145,13 @@ class Boilerplate(QtWidgets.QWidget):
 
         # Attach module to main window
         self.ui.verticalLayout.addWidget(self.ui.module)
+
         # Edit widget which resides in module
         self.ui.module.label.setText('Push the button!')
+
+        # Edit widget which resides in main window
+        self.ui.pushButton.setText('Push me!')
+
         # Signals
         # The "pushButton" widget resides in main window
         self.ui.pushButton.clicked.connect(self.say_hello)
