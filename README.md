@@ -20,7 +20,6 @@ A boilerplate for creating PyQt4/PySide and PyQt5/PySide2 applications running i
 - Can be run in multiple ways (see examples).
 
 <br>
-<br>
 
 #### Examples
 
@@ -52,7 +51,6 @@ boilerplate.run_maya()  # or boilerplate.run_nuke()
 You can also copy-paste the boilerplate.py contents into your DCC application.
 
 <br>
-<br>
 
 #### Usage
 
@@ -69,7 +67,6 @@ elif __binding.startswith('PySide'):
     ...
 ```
 
-<br>
 <br>
 
 #### Modifying the boilerplate
@@ -105,7 +102,6 @@ Rename every occurance of `boil` in the code to reflect a unique name for your a
 Change the class `Boilerplate` to your heart's content!
 
 <br>
-<br>
 
 #### Options
 
@@ -113,7 +109,6 @@ Change the class `Boilerplate` to your heart's content!
 - Dock UI with Maya UI by setting `DOCK_WITH_MAYA_UI`.
 - Dock UI with Nuke UI by setting `DOCK_WITH_NUKE_UI`.
 
-<br>
 <br>
 
 ## Version 1.0
