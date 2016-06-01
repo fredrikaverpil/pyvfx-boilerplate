@@ -1,392 +1,240 @@
-# Author: fredrik.averpil@gmail.com, http://fredrikaverpil.tumblr.com
-# Github: https://github.com/fredrikaverpil/pyVFX-boilerplate
+"""This uses a Qt binding of "any" kind, thanks to the Qt.py module,
+to produce an UI. First, one .ui file is loaded and then attaches
+another .ui file onto the first. Think of it as creating a modular UI.
 
-''' Imports regardless of Qt type
---------------------------------------------------------------------------------
-'''
-import os, sys, json, platform
-import xml.etree.ElementTree as xml
-from cStringIO import StringIO
+More on Qt.py:
+https://github.com/mottosso/Qt.py
+"""
 
-
-
-''' Configuration: Global settings
---------------------------------------------------------------------------------
-QT_BINDINGS: Edit this to auto-detect or force Qt Bindnings: Auto|PySide|PyQt
-EXTERNAL_SITE_PACKAGES_PATH_<OS>: Optional, location of site-packages location
-(such as a virtualenv containing PySide and pysideuic and/or PyQt and SIP).
-UI_FILE: Full path to .ui file to load, created by Qt Designer
-WINDOW_TITLE: The visible title of the window
-WINDOW_OBJECT: The name of the window object
-sys.dont_write_bytecode: Skips .pyc file creation, if set to True '''
-
-QT_BINDINGS = 'Auto'
-EXTERNAL_SITE_PACKAGES_PATH_WINDOWS = None
-EXTERNAL_SITE_PACKAGES_PATH_LINUX = None
-EXTERNAL_SITE_PACKAGES_PATH_OSX = None
-UI_FILE = os.path.join(os.path.dirname(__file__), 'main_window.ui')
-WINDOW_TITLE = 'Hello World'
-WINDOW_OBJECT = 'helloWorld'
-sys.dont_write_bytecode = False
+import sys
+import os
+import site
 
 
+# ----------------------------------------------------------------------
+# Python site packages helper functions
+# ----------------------------------------------------------------------
 
-''' Configuration: Standalone mode
---------------------------------------------------------------------------------
-MAYA_PALETTE: Uses approximately the same stylesheet as seen in Maya 2015 '''
-
-MAYA_PALETTE = False
-
-
-
-''' Configuration: Maya
---------------------------------------------------------------------------------
-MAYA_LAUNCH_AS_DOCKED_WINDOW:
-False = opens as free floating window
-True = docks window to Maya UI '''
-
-MAYA_LAUNCH_AS_DOCKED_WINDOW = False
+def _find_qtpy(search_paths, register=False):
+    """Searches for Qt.py and register the site path if register is True"""
+    for search_path in search_paths:
+        if os.path.exists(search_path):
+            for item in os.listdir(search_path):
+                if item == 'Qt.py':
+                    if register:
+                        site.addsitedir(search_path)  # Add site path
+                    return True
 
 
-
-''' Configuration: Nuke
---------------------------------------------------------------------------------
-NUKE_LAUNCH_AS_PANEL: Opens a regular window or a panel
-NUKE_PARENT_TO_NUKE_MAIN_WINDOW: If True, makes window stay on top of Nuke '''
-
-NUKE_LAUNCH_AS_PANEL = False
-NUKE_PARENT_TO_NUKE_MAIN_WINDOW = True
+def _sitepackages_setup(additional_search_paths):
+    # Make non-standalone DCC application find Qt.py module
+    site_paths = site.getsitepackages()
+    if not _find_qtpy(site_paths):
+        if not _find_qtpy(additional_search_paths, register=True):
+            raise ImportError('Could not find Qt.py module.')
 
 
+def _ui_dir(filepath):
+    """Attempt to auto-detect path to ui files"""
 
-''' Run mode
---------------------------------------------------------------------------------
-'''
+    if os.path.exists(filepath):
+        return filepath
+    else:
+        try:
+            boilerplate_dir = os.path.dirname(__file__)
+            ui_dir = os.path.join(boilerplate_dir, 'data')
+            return ui_dir
+        except NameError:
+            raise IOError('Could not locate .ui directory.')
 
-RUN_MODE = 'standalone'
+
+# ----------------------------------------------------------------------
+# Configuration
+# ----------------------------------------------------------------------
+
+# Set up filepath in order to find .ui files (required for Maya and Nuke)
+ui_dir = _ui_dir('/Users/fredrik/code/github/pyvfx-boilerplate/data')
+
+# Find Qt.py module and setup site-packages accordingly
+_sitepackages_setup([
+    'C:/Python27/Lib/site-packages',  # Windows
+    '/usr/lib/python2.7/site-packages',  # Linux
+    '/Library/Python/2.7/site-packages',  # OS X
+
+    '/usr/local/Cellar/python/2.7.11/Frameworks/Python.framework/Versions/' +
+    'Current/lib/python2.7/site-packages'  # Homebrew location, Python 2.7.11
+])
+
+# Qt.py option: Set up preffered binding
+# os.environ['QT_PREFERRED_BINDING'] = 'PyQt4'
+# os.environ['QT_PREFERRED_BINDING'] = 'PySide'
+# os.environ['QT_PREFERRED_BINDING'] = 'PyQt5'
+# os.environ['QT_PREFERRED_BINDING'] = 'PySide2'
+
+# Window title and object names
+WINDOW_TITLE = 'Boilerplate'
+WINDOW_OBJECT = 'boilerPlate'
+
+# Maya-specific
+DOCK_WITH_MAYA_UI = False
+
+# Nuke-specific
+DOCK_WITH_NUKE_UI = False
+
+
+# ----------------------------------------------------------------------
+# Detect environment
+# ----------------------------------------------------------------------
+
 try:
-	import maya.cmds as cmds
-	import maya.OpenMayaUI as omui
-	import shiboken
-	RUN_MODE = 'maya'
+    import maya.cmds as cmds
+    MAYA = True
 except ImportError:
-	pass
+    MAYA = False
 
 try:
-	import nuke
-	import nukescripts
-	RUN_MODE = 'nuke'
+    import nuke
+    import nukescripts
+    NUKE = True
 except ImportError:
-	pass
+    NUKE = False
+
+STANDALONE = False
+if not MAYA and not NUKE:
+    STANDALONE = True
 
 
+# ----------------------------------------------------------------------
+# Main script
+# ----------------------------------------------------------------------
 
-''' Qt Bindnings
---------------------------------------------------------------------------------
-'''
+# Qt setup
+from Qt import QtCore
+# from Qt import QtGui
+from Qt import QtWidgets
+from Qt import __binding__
+from Qt import load_ui
 
-# Load external site-packages
-def append_to_sys_path(path):
-	sys.path.append( path )
-	print 'Using external site-packages at', path
-
-if ('windows' in platform.system().lower() and
-	type(EXTERNAL_SITE_PACKAGES_PATH_WINDOWS) != type(None) ):
-	append_to_sys_path(path=EXTERNAL_SITE_PACKAGES_PATH_WINDOWS)
-elif ('linux' in platform.system().lower() and
-	type(EXTERNAL_SITE_PACKAGES_PATH_LINUX) != type(None) ):
-	append_to_sys_path(path=EXTERNAL_SITE_PACKAGES_PATH_LINUX)
-elif ('darwin' in platform.system().lower() and
-	type(EXTERNAL_SITE_PACKAGES_PATH_OSX) != type(None) ):
-	append_to_sys_path(path=EXTERNAL_SITE_PACKAGES_PATH_OSX)
-
-# Load Qt bindings
-if QT_BINDINGS == 'Auto':
-	try:
-		from PySide import QtGui, QtGui, QtUiTools
-		import pysideuic
-		QT_BINDINGS = 'PySide'
-	except ImportError:
-		from PyQt4 import QtGui, QtCore, uic
-		import sip
-		QT_BINDINGS = 'PyQt'
-elif QT_BINDINGS == 'PySide':
-	from PySide import QtGui, QtGui, QtUiTools
-	import pysideuic
-elif QT_BINDINGS == 'PyQt':
-	from PyQt4 import QtGui, QtCore, uic
-	import sip
-
-# Summary
-print	('This app is now running in ' + RUN_MODE + ' mode,'
-		' using ' + QT_BINDINGS + ' Qt bindings')
+# Debug
+# print 'Using', __binding__
 
 
+class Boilerplate(QtWidgets.QWidget):
+    """Example showing how UI files can be loaded using the same script
+    when taking advantage of the Qt.py module and build-in methods
+    from PySide/PySide2/PyQt4/PyQt5."""
+    def __init__(self, parent=None):
+        super(Boilerplate, self).__init__()
+        # Filepaths
+        main_window_file = os.path.join(ui_dir, 'main_window.ui')
+        module_file = os.path.join(ui_dir, 'module.ui')
 
-''' Auto-setup classes and functions
---------------------------------------------------------------------------------
-'''
+        # Load UIs
+        self.ui = load_ui(main_window_file)  # Main window
+        self.ui.module = load_ui(module_file)  # Module
 
-class PyQtFixer(QtGui.QMainWindow):
-	def __init__(self, parent=None):
-		'''Super, loadUi, signal connections'''
-		super(PyQtFixer, self).__init__(parent)
-		print 'Making a detour (hack), necessary for when using PyQt'
+        # Set object name and window title
+        self.ui.setObjectName(WINDOW_OBJECT)
+        self.ui.setWindowTitle(WINDOW_TITLE)
 
+        if NUKE and DOCK_WITH_NUKE_UI:
+            # Set layout to vertical layout
+            self.setLayout(QtWidgets.QVBoxLayout())
+            # Attach main UI to layout
+            self.layout().addWidget(self.ui)
 
-def load_ui_type(UI_FILE):
-	'''
-	Pyside lacks the "load_ui_type" command, so we have to convert the ui file
-	to py code in-memory first and then execute it in a special frame to
-	retrieve the form_class.
-	'''
-	parsed = xml.parse(UI_FILE)
-	widget_class = parsed.find('widget').get('class')
-	form_class = parsed.find('class').text
+        # Attach module to main window
+        self.ui.verticalLayout.addWidget(self.ui.module)
+        # Edit widget which resides in module
+        self.ui.module.label.setText('Push the button!')
+        # Signals
+        # The "pushButton" widget resides in main window
+        self.ui.pushButton.clicked.connect(self.say_hello)
 
-	with open(UI_FILE, 'r') as f:
-		o = StringIO()
-		frame = {}
-
-		if QT_BINDINGS == 'PySide':
-			pysideuic.compileUi(f, o, indent=0)
-			pyc = compile(o.getvalue(), '<string>', 'exec')
-			exec pyc in frame
-
-			# Fetch the base_class and form class based on their type in the xml
-			# from designer
-			form_class = frame['Ui_%s'%form_class]
-			base_class = eval('QtGui.%s'%widget_class)
-		elif QT_BINDINGS == 'PyQt':
-			form_class = PyQtFixer
-			base_class = QtGui.QMainWindow
-	return form_class, base_class
-form, base = load_ui_type(UI_FILE)
+    def say_hello(self):
+        """Set the label text.
+        The "label" widget resides in the module
+        """
+        self.ui.module.label.setText('Hello world!')
 
 
+# ----------------------------------------------------------------------
+# DCC application helper functions
+# ----------------------------------------------------------------------
 
-def wrap_instance(ptr, base=None):
-	'''
-	Utility to convert a pointer to a Qt class instance (PySide/PyQt compatible)
-
-	:param ptr: Pointer to QObject in memory
-	:type ptr: long or Swig instance
-	:param base: (Optional) Base class to wrap with (Defaults to QObject,
-	             which should handle anything)
-	:type base: QtGui.QWidget
-	:return: QWidget or subclass instance
-	:rtype: QtGui.QWidget
-	'''
-	if ptr is None:
-		return None
-	ptr = long(ptr) #Ensure type
-	if globals().has_key('shiboken'):
-		if base is None:
-			qObj = shiboken.wrapInstance(long(ptr), QtCore.QObject)
-			metaObj = qObj.metaObject()
-			cls = metaObj.className()
-			superCls = metaObj.superClass().className()
-			if hasattr(QtGui, cls):
-				base = getattr(QtGui, cls)
-			elif hasattr(QtGui, superCls):
-				base = getattr(QtGui, superCls)
-			else:
-				base = QtGui.QWidget
-		return shiboken.wrapInstance(long(ptr), base)
-	elif globals().has_key('sip'):
-		base = QtCore.QObject
-		return sip.wrapinstance(long(ptr), base)
-	else:
-		return None
+def _delete_existing_ui():
+    """Delete existing UI"""
+    if MAYA:
+        if cmds.window(WINDOW_OBJECT, q=True, exists=True):
+            cmds.deleteUI(WINDOW_OBJECT)  # Delete window
+        if cmds.dockControl('MayaWindow|'+WINDOW_TITLE, q=True, ex=True):
+            cmds.deleteUI('MayaWindow|'+WINDOW_TITLE)  # Delete docked window
+    elif NUKE:
+        pass
 
 
-def maya_main_window():
-	''' Returns the main Maya window. This works for both PySide and PyQt
-	since it uses the custom wrap_instance function. '''
-	main_window_ptr = omui.MQtUtil.mainWindow()
-	return wrap_instance( long( main_window_ptr ), QtGui.QWidget )
-
-
-
-''' Main class
---------------------------------------------------------------------------------
-'''
-
-class HelloWorld(form, base):
-	def __init__(self, parent=None):
-		"""Super, loadUi, signal connections"""
-		super(HelloWorld, self).__init__(parent)
-
-		if QT_BINDINGS == 'PySide':
-			self.setupUi(self)
-		elif QT_BINDINGS == 'PyQt':
-			uic.loadUi(UI_FILE, self)
-
-		self.setObjectName(WINDOW_OBJECT)
-		self.setWindowTitle(WINDOW_TITLE)
-
-		# Access the UI, regardless of having used PySide or PyQt
-		# Example:
-		self.listWidget.addItem('Hello world')
-
-	def closeEvent(self, event):
-		''' Delete this object when closed.'''
-		self.deleteLater()
-
-	def set_maya_palette_with_tweaks(self):
-		palette_json_file = os.path.join(os.path.dirname(__file__),
-					   'qpalette_maya2015.json')
-		groups = ['Disabled', 'Active', 'Inactive', 'Normal']
-		roles = [
-				'AlternateBase',
-				'Background',
-				'Base',
-				'Button',
-				'ButtonText',
-				'BrightText',
-				'Dark',
-				'Foreground',
-				'Highlight',
-				'HighlightedText',
-				'Light',
-				'Link',
-				'LinkVisited',
-				'Mid',
-				'Midlight',
-				'Shadow',
-				'ToolTipBase',
-				'ToolTipText',
-				'Text',
-				'Window',
-				'WindowText'
-				]
-
-		def set_palette_from_dict(dct):
-			palette = QtGui.QPalette()
-			for role in roles:
-				try:
-					for group in groups:
-						color = QtGui.QColor(dct['%s:%s' % (role, group)])
-						qGrp = getattr(QtGui.QPalette, group)
-						qRl = getattr(QtGui.QPalette, role)
-						palette.setColor(qGrp, qRl, color)
-				except:
-					print 'Could not use: ' + str(palette)
-			try:
-				QtGui.QApplication.setPalette(palette)
-			except:
-				print 'Could not set palette: ' + str(palette)
-
-		def set_style_plastique():
-			QtGui.QApplication.setStyle("plastique")
-
-		def set_maya_tweaks():
-			base_palette = QtGui.QApplication.palette()
-
-			# Set custom colors
-			LIGHT_COLOR = QtGui.QColor(100, 100, 100)
-			MID_COLOR = QtGui.QColor(68, 68, 68)
-
-			# Create a new palette
-			tab_palette = QtGui.QPalette(base_palette)
-			tab_palette.setBrush(   QtGui.QPalette.Window,
-									QtGui.QBrush(LIGHT_COLOR))
-			tab_palette.setBrush(	QtGui.QPalette.Button,
-									QtGui.QBrush(MID_COLOR))
-
-			# Define the widgets that needs tweaking
-			widget_palettes = {}
-			widget_palettes["QTabBar"] = tab_palette
-			widget_palettes["QTabWidget"] = tab_palette
-
-			# Set the new tweaked palette
-			for name, palette in widget_palettes.items():
-				QtGui.QApplication.setPalette(palette, name)
-
-		def read_json():
-			# read
-			with open(palette_json_file, 'rb') as data_file:
-				data = json.load(data_file)
-			return data
-
-		# Read the JSON theme data and set the palette
-		data = read_json()
-		set_palette_from_dict(data)
-		set_style_plastique()
-		set_maya_tweaks()
-
-
-
-
-
-
-''' Run functions
---------------------------------------------------------------------------------
-'''
-
-def run_standalone():
-	app = QtGui.QApplication(sys.argv)
-	global gui
-	gui = HelloWorld()
-	if MAYA_PALETTE:
-		gui.set_maya_palette_with_tweaks()
-	gui.show()
-	sys.exit(app.exec_())
+# ----------------------------------------------------------------------
+# Run functions
+# ----------------------------------------------------------------------
 
 def run_maya():
-	if cmds.window(WINDOW_OBJECT, q=True, exists=True):
-		cmds.deleteUI(WINDOW_OBJECT)
+    """Run in Maya"""
+    _delete_existing_ui()  # Delete any existing existing UI
+    global boil
+    boil = Boilerplate(parent=QtWidgets.QApplication.activeWindow())
+    if not DOCK_WITH_MAYA_UI:
+        boil.ui.setWindowFlags(QtCore.Qt.WindowStaysOnTopHint)  # Stay on top
+        # boil.ui.setWindowModality(QtCore.Qt.WindowModal)  # Modality
+        boil.ui.show()  # Show the UI
+    elif DOCK_WITH_MAYA_UI:
+        # Dock window with Maya UI
+        print 'Docking...'
+        allowedAreas = ['right', 'left']
+        cmds.dockControl(WINDOW_TITLE, label=WINDOW_TITLE, area='left',
+                         content=WINDOW_OBJECT, allowedArea=allowedAreas)
 
-	if cmds.dockControl( 'MayaWindow|'+WINDOW_TITLE, q=True, ex=True):
-		cmds.deleteUI( 'MayaWindow|'+WINDOW_TITLE )
-
-	global gui
-	gui = HelloWorld( parent=maya_main_window() )
-	# Alternative way of setting parent window below:
-	#gui = HelloWorld( parent=QtGui.QApplication.activeWindow() )
-
-	if MAYA_LAUNCH_AS_DOCKED_WINDOW:
-		allowedAreas = ['right', 'left']
-		cmds.dockControl( WINDOW_TITLE, label=WINDOW_TITLE, area='left',
-						  content=WINDOW_OBJECT, allowedArea=allowedAreas )
-	else:
-		#gui.setWindowModality(QtCore.Qt.WindowModal) # Set modality
-		gui.show()
 
 def run_nuke():
-	module_name = __name__
-	if module_name == '__main__':
-		module_name = ''
-	else:
-		module_name = module_name + '.'
-	global gui
-	if NUKE_LAUNCH_AS_PANEL:
-		panel = nukescripts.panels.registerWidgetAsPanel(
-					widget = module_name + '.' + WINDOW_TITLE,
-					name = WINDOW_TITLE,
-					id='uk.co.thefoundry.' + WINDOW_TITLE,
-					create=True)
-		pane = nuke.getPaneFor('Properties.1')
-		panel.addToPane( pane )
-		gui = panel.customKnob.getObject().widget
+    """Run in Nuke"""
+    _delete_existing_ui()  # Delete any alrady existing UI
+    global boil
+    if not DOCK_WITH_NUKE_UI:
+        boil = Boilerplate(parent=QtWidgets.QApplication.activeWindow())
+        boil.ui.setWindowFlags(QtCore.Qt.WindowStaysOnTopHint)  # Stay on top
+        # boil.ui.setWindowModality(QtCore.Qt.WindowModal)  # Modality
+        boil.ui.show()  # Show the UI
 
-	else:
-		if NUKE_PARENT_TO_NUKE_MAIN_WINDOW:
-			gui = HelloWorld( parent=QtGui.QApplication.activeWindow() )
-		else:
-			gui = HelloWorld()
-		#gui.setWindowModality(QtCore.Qt.WindowModal) # Set modality
-		gui.show()
-
-
+    elif DOCK_WITH_NUKE_UI:
+        prefix = ''
+        basename = os.path.basename(__file__)
+        module_name = basename[: basename.rfind('.')]
+        if __name__ == module_name:
+            prefix = module_name + '.'
+        panel = nukescripts.panels.registerWidgetAsPanel(
+                    widget=prefix + 'Boilerplate',  # module_name.Class_name
+                    name=WINDOW_TITLE,
+                    id='uk.co.thefoundry.' + WINDOW_TITLE,
+                    create=True)
+        pane = nuke.getPaneFor('Properties.1')
+        panel.addToPane(pane)
+        boil = panel.customKnob.getObject().widget
 
 
+def run_standalone():
+    """Run standalone"""
+    app = QtWidgets.QApplication(sys.argv)
+    global boil
+    boil = Boilerplate()
+    boil.ui.setWindowFlags(QtCore.Qt.WindowStaysOnTopHint)  # Stay on top
+    # boil.ui.setWindowModality(QtCore.Qt.WindowModal)  # Modality
+    boil.ui.show()  # Show the UI
+    sys.exit(app.exec_())
 
-if RUN_MODE == 'standalone':
-	run_standalone()
-'''
-elif RUN_MODE == 'maya':
-	run_maya()
-elif RUN_MODE == 'nuke':
-	run_nuke()
-'''
+
+if __name__ == "__main__":
+    if MAYA:
+        run_maya()
+    elif NUKE:
+        run_nuke()
+    else:
+        run_standalone()
