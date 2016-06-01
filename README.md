@@ -56,7 +56,7 @@ You can also copy-paste the boilerplate.py contents into the script editor of Ma
 
 Since the boilerplate relies on [`Qt.py`](https://github.com/mottosso/Qt.py), you should design your application as if you were designing it for PyQt5/PySide2. This means creating widgets using `QtWidgets` rather than `QtGui`. The `Qt.py` module takes care of the remapping and makes for compatibility with PyQt4/PySide. Read more over at the [`Qt.py` repository](https://github.com/mottosso/Qt.py).
 
-Tip: when you cannot rely on `Qt.py`, create an issue, probably over at [`Qt.py`](https://github.com/mottosso/Qt.py) and/or detect which binding is being used and write some custom code:
+Tip: when you cannot rely on `Qt.py`, create an issue (probably over at [`Qt.py`](https://github.com/mottosso/Qt.py)) and/or detect which binding is being used and write some custom code:
 
 ```python
 from Qt import __binding__
