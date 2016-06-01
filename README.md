@@ -40,7 +40,7 @@ python boilerplate.py
 ```
 
 ```python
-# Run in scripteditor of Maya or Nuke (requires having installed Qt.py)
+# Run in script editor of Maya or Nuke (requires having installed Qt.py)
 import sys
 sys.path.append('/path/to/pyvfx-boilerplate')
 import boilerplate
