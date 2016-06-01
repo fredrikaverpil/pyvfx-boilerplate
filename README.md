@@ -19,6 +19,9 @@ A boilerplate for creating PyQt4/PySide and PyQt5/PySide2 applications running i
 - Now comes with Qt.WindowStaysOnTopHint out of the box.
 - Can be run in multiple ways (see examples).
 
+<br>
+<br>
+
 #### Examples
 
 ```python
@@ -46,8 +49,10 @@ import boilerplate
 boilerplate.run_maya()  # or boilerplate.run_nuke()
 ```
 
-
 You can also copy-paste the boilerplate.py contents into your DCC application.
+
+<br>
+<br>
 
 #### Usage
 
@@ -63,6 +68,9 @@ if __binding__.startswith('PyQt'):
 elif __binding.startswith('PySide'):
     ...
 ```
+
+<br>
+<br>
 
 #### Modifying the boilerplate
 
@@ -94,18 +102,21 @@ WINDOW_OBJECT = 'boilerPlate'
 
 Rename every occurance of `boil` in the code to reflect a unique name for your application.
 
-Make sure the 
-
 Change the class `Boilerplate` to your heart's content!
 
-Options:
+<br>
+<br>
+
+#### Options
+
 - If you wish to force a binding, define `QT_PREFERRED_BINDING`.
 - Dock UI with Maya UI by setting `DOCK_WITH_MAYA_UI`.
 - Dock UI with Nuke UI by setting `DOCK_WITH_NUKE_UI`.
 
+<br>
+<br>
 
-
-### Version 1.0
+## Version 1.0
 
 Edit boilerplate.py and edit the "QT_BINDINGS" variable to say either "Auto", "PySide" or "PyQt". 
 Then just execute boilerplate.py either inside of Nuke, Maya or as standalone. Please note that Maya 2013 and above as well as Nuke 6.3 and above has native support for PySide.
