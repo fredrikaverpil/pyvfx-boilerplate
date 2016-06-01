@@ -48,7 +48,7 @@ import boilerplate
 boilerplate.run_maya()  # or boilerplate.run_nuke()
 ```
 
-You can also copy-paste the boilerplate.py contents into your DCC application.
+You can also copy-paste the boilerplate.py contents into the script editor of Maya or Nuke and just execute it.
 
 <br>
 
