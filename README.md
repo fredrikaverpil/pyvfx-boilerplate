@@ -38,7 +38,7 @@ Run as standalone:
 python boilerplate.py
 ```
 
-Run in script editor of Maya or Nuke (requires having installed Qt.py):
+Run in script editor of Maya or Nuke:
 
 ```python
 import sys
