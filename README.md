@@ -23,8 +23,9 @@ A boilerplate for creating PyQt4/PySide and PyQt5/PySide2 applications running i
 
 #### Example usage
 
+Download, install and run standalone:
+
 ```python
-# Download, install and run standalone
 git clone https://github.com/pyvfx-boilerplate.git
 cd pyvfx-boilerplate
 pip install -U Qt.py
@@ -33,14 +34,17 @@ python
 >>> boilerplate.run_standalone()
 ```
 
+Just run as standalone:
+
 ```python
-# Just run as standalone
+
 pip install Qt.py
 python boilerplate.py
 ```
 
+Run in script editor of Maya or Nuke (requires having installed Qt.py):
+
 ```python
-# Run in script editor of Maya or Nuke (requires having installed Qt.py)
 import sys
 sys.path.append('/path/to/pyvfx-boilerplate')
 import boilerplate
