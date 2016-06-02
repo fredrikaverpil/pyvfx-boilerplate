@@ -21,6 +21,12 @@ A boilerplate for creating PyQt4/PySide and PyQt5/PySide2 applications running i
 
 <br>
 
+#### Noteworthy known issues
+
+- Does not work with Nuke 10.0v1 on OS X: [#7](https://github.com/fredrikaverpil/pyvfx-boilerplate/issues/7)
+
+<br>
+
 #### Installation
 
 Please note, this boilerplate requires [`Qt.py`](https://github.com/mottosso/Qt.py).
