@@ -71,31 +71,7 @@ elif __binding.startswith('PySide'):
 
 #### Modifying the boilerplate
 
-Set up the filepath to the UI files:
-
-```python
-ui_dir = _ui_dir('/path/to/ui_files')
-```
-
-If the `Qt` module isn't picked up, define where it can be found:
-
-```python
-_sitepackages_setup([
-    'C:/Python27/Lib/site-packages',  # Windows
-    '/usr/lib/python2.7/site-packages',  # Linux
-    '/Library/Python/2.7/site-packages',  # OS X
-
-    '/usr/local/Cellar/python/2.7.11/Frameworks/Python.framework/Versions/' +
-    'Current/lib/python2.7/site-packages'  # Homebrew location, Python 2.7.11
-])
-```
-
-Set the window title and the object name:
-
-```python
-WINDOW_TITLE = 'Boilerplate'
-WINDOW_OBJECT = 'boilerPlate'
-```
+Open up `boilerplate.py` and scroll down to the `# Configuration` section and review the settings.
 
 Rename every occurance of `boil` in the code to reflect a unique name for your application.
 
