@@ -12,78 +12,7 @@ import site
 
 
 # ----------------------------------------------------------------------
-# Python site packages helper functions
-# ----------------------------------------------------------------------
-
-def _find_qtpy(search_paths, register=False):
-    """Searches for Qt.py and register the site path if register is True"""
-    for search_path in search_paths:
-        if os.path.exists(search_path):
-            for item in os.listdir(search_path):
-                if item == 'Qt.py':
-                    if register:
-                        site.addsitedir(search_path)  # Add site path
-                    return True
-
-
-def _sitepackages_setup(additional_search_paths):
-    # Make non-standalone DCC application find Qt.py module
-    site_paths = site.getsitepackages()
-    if not _find_qtpy(site_paths):
-        if not _find_qtpy(additional_search_paths, register=True):
-            raise ImportError('Could not find Qt.py module.')
-
-
-def _ui_dir(filepath):
-    """Attempt to auto-detect path to ui files"""
-
-    if os.path.exists(filepath):
-        return filepath
-    else:
-        try:
-            boilerplate_dir = os.path.dirname(__file__)
-            ui_dir = os.path.join(boilerplate_dir, 'data')
-            return ui_dir
-        except NameError:
-            raise IOError('Could not locate .ui directory.')
-
-
-# ----------------------------------------------------------------------
-# Configuration
-# ----------------------------------------------------------------------
-
-# Set up filepath in order to find .ui files (required for Maya and Nuke)
-ui_dir = _ui_dir('/Users/fredrik/code/github/pyvfx-boilerplate/data')
-
-# Find Qt.py module and setup site-packages accordingly
-_sitepackages_setup([
-    'C:/Python27/Lib/site-packages',  # Windows
-    '/usr/lib/python2.7/site-packages',  # Linux
-    '/Library/Python/2.7/site-packages',  # OS X
-
-    '/usr/local/Cellar/python/2.7.11/Frameworks/Python.framework/Versions/' +
-    'Current/lib/python2.7/site-packages'  # Homebrew location, Python 2.7.11
-])
-
-# Qt.py option: Set up preffered binding
-# os.environ['QT_PREFERRED_BINDING'] = 'PyQt4'
-# os.environ['QT_PREFERRED_BINDING'] = 'PySide'
-# os.environ['QT_PREFERRED_BINDING'] = 'PyQt5'
-# os.environ['QT_PREFERRED_BINDING'] = 'PySide2'
-
-# Window title and object names
-WINDOW_TITLE = 'Boilerplate'
-WINDOW_OBJECT = 'boilerPlate'
-
-# Maya-specific
-DOCK_WITH_MAYA_UI = False
-
-# Nuke-specific
-DOCK_WITH_NUKE_UI = False
-
-
-# ----------------------------------------------------------------------
-# Detect environment
+# Environment
 # ----------------------------------------------------------------------
 
 try:
@@ -96,12 +25,100 @@ try:
     import nuke
     import nukescripts
     NUKE = True
+    NUKE_VERSION = nuke.NUKE_VERSION_STRING
+    NUKE_VERSION_MAJOR = nuke.NUKE_VERSION_MAJOR
 except ImportError:
     NUKE = False
 
 STANDALONE = False
 if not MAYA and not NUKE:
     STANDALONE = True
+
+
+# ----------------------------------------------------------------------
+# Configuration
+# ----------------------------------------------------------------------
+
+# Window title and object names
+WINDOW_TITLE = 'Boilerplate'
+WINDOW_OBJECT = 'boilerPlate'
+
+# Maya-specific
+DOCK_WITH_MAYA_UI = False
+
+# Nuke-specific
+DOCK_WITH_NUKE_UI = False
+
+# Full path to where .ui files are stored
+UI_PATH = '/Users/fredrik/code/github/pyvfx-boilerplate/data'
+
+# Find Qt.py module and setup site-packages accordingly
+SITE_SEARCH_PATHS = [
+    'C:/Python27/Lib/site-packages',  # Windows
+    '/usr/lib/python2.7/site-packages',  # Linux
+    '/Library/Python/2.7/site-packages',  # OS X
+
+    '/usr/local/Cellar/python/2.7.11/Frameworks/Python.framework/Versions/' +
+    'Current/lib/python2.7/site-packages'  # Homebrew location, Python 2.7.11
+]
+
+# Qt.py option: Set up preffered binding
+# os.environ['QT_PREFERRED_BINDING'] = 'PyQt4'
+# os.environ['QT_PREFERRED_BINDING'] = 'PySide'
+# os.environ['QT_PREFERRED_BINDING'] = 'PyQt5'
+# os.environ['QT_PREFERRED_BINDING'] = 'PySide2'
+if NUKE:
+    # AvoidPri loading site-wide PyQt4/PyQt5 inside of Nuke
+    os.environ['QT_PREFERRED_BINDING'] = 'PySide'
+
+
+# ----------------------------------------------------------------------
+# Python site packages helper functions
+# ----------------------------------------------------------------------
+
+def _find_qtpy(search_paths, register=False):
+    """Searches for Qt.py and register the site path if register is True"""
+    for search_path in search_paths:
+        if os.path.exists(search_path):
+            for item in os.listdir(search_path):
+                if item == 'Qt.py':
+                    if register:
+                        site.addsitedir(search_path)  # Add site path
+                        print 'Added site:', search_path
+                    return True
+
+
+def _sitepackages_setup(additional_search_paths):
+    # Make non-standalone DCC application find Qt.py module
+    site_paths = site.getsitepackages()
+    if not _find_qtpy(site_paths):
+        if not _find_qtpy(additional_search_paths, register=True):
+            raise ImportError('Could not find Qt.py module.')
+
+
+def _ui_dir(folderpath):
+    """Attempt to auto-detect path to ui files"""
+
+    if os.path.exists(folderpath):
+        return folderpath
+    else:
+        try:
+            boilerplate_dir = os.path.dirname(__file__)
+            ui_dir = os.path.join(boilerplate_dir, 'data')
+            return ui_dir
+        except NameError:
+            raise IOError('Could not locate .ui directory.')
+
+
+# ----------------------------------------------------------------------
+# Set up Python modules access
+# ----------------------------------------------------------------------
+
+# Set up filepath in order to find .ui files (required for Maya and Nuke)
+ui_dir = _ui_dir(UI_PATH)
+
+# Find Qt.py module and setup site-packages accordingly
+_sitepackages_setup(SITE_SEARCH_PATHS)
 
 
 # ----------------------------------------------------------------------
@@ -116,7 +133,7 @@ from Qt import __binding__
 from Qt import load_ui
 
 # Debug
-# print 'Using', __binding__
+print 'Using', __binding__
 
 
 class Boilerplate(QtWidgets.QWidget):
