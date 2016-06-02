@@ -21,7 +21,7 @@ A boilerplate for creating PyQt4/PySide and PyQt5/PySide2 applications running i
 
 <br>
 
-#### Examples
+#### Example usage
 
 ```python
 # Download, install and run standalone
@@ -52,7 +52,17 @@ You can also copy-paste the boilerplate.py contents into the script editor of Ma
 
 <br>
 
-#### Usage
+#### Modifying the boilerplate
+
+Open up `boilerplate.py` and scroll down to the `# Configuration` section and review the settings.
+
+Rename every occurance of `boil` in the code to reflect a unique name for your application.
+
+Change the class `Boilerplate` to your heart's content!
+
+<br>
+
+#### Development guidelines
 
 Since the boilerplate relies on [`Qt.py`](https://github.com/mottosso/Qt.py), you should design your application as if you were designing it for PyQt5/PySide2. This means creating widgets using `QtWidgets` rather than `QtGui`. The `Qt.py` module takes care of the remapping and makes for compatibility with PyQt4/PySide. Read more over at the [`Qt.py` repository](https://github.com/mottosso/Qt.py).
 
@@ -69,23 +79,6 @@ elif __binding.startswith('PySide'):
 
 <br>
 
-#### Modifying the boilerplate
-
-Open up `boilerplate.py` and scroll down to the `# Configuration` section and review the settings.
-
-Rename every occurance of `boil` in the code to reflect a unique name for your application.
-
-Change the class `Boilerplate` to your heart's content!
-
-<br>
-
-#### Options
-
-- If you wish to force a binding, define `QT_PREFERRED_BINDING`.
-- Dock UI with Maya UI by setting `DOCK_WITH_MAYA_UI`.
-- Dock UI with Nuke UI by setting `DOCK_WITH_NUKE_UI`.
-
-<br>
 
 ## Version 1.0
 
