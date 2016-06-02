@@ -21,7 +21,7 @@ A boilerplate for creating PyQt4/PySide and PyQt5/PySide2 applications running i
 
 <br>
 
-### Installation
+#### Installation
 
 Please note, this boilerplate requires [`Qt.py`](https://github.com/mottosso/Qt.py).
 
@@ -74,3 +74,13 @@ if __binding__.startswith('PyQt'):
 elif __binding.startswith('PySide'):
     ...
 ```
+
+#### Issues
+
+Something wrong, have a question or wish to file a feature request?
+
+Open up an issue [here](https://github.com/fredrikaverpil/pyvfx-boilerplate/issues)!
+
+#### Contribute
+
+If you wish to contribute, pull requests are more than welcome!
