@@ -49,6 +49,9 @@ DOCK_WITH_MAYA_UI = False
 # Nuke-specific
 DOCK_WITH_NUKE_UI = False
 
+# Standalone-specific
+PALETTE_FILEPATH = '/Users/fredrik/code/repos/pyvfx-boilerplate/data/qpalette_maya2015.json'
+
 # Full path to where .ui files are stored
 UI_PATH = '/Users/fredrik/code/repos/pyvfx-boilerplate/data'
 
@@ -131,6 +134,8 @@ from Qt import QtCore
 from Qt import QtWidgets
 from Qt import __binding__
 from Qt import load_ui
+
+from utils import palette
 
 # Debug
 print 'Using', __binding__
@@ -271,7 +276,12 @@ def run_standalone():
     app = QtWidgets.QApplication(sys.argv)
     global boil
     boil = Boilerplate()
+<<<<<<< develop
     boil.ui.show()  # Show the UIs
+=======
+    palette.set_maya_palette_with_tweaks(PALETTE_FILEPATH)
+    boil.ui.show()  # Show the UI
+>>>>>>> Add Maya 2015 palette
     sys.exit(app.exec_())
 
 
