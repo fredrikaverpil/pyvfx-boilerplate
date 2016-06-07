@@ -84,7 +84,6 @@ def _find_qtpy(search_paths, register=False):
                 if item == 'Qt.py':
                     if register:
                         site.addsitedir(search_path)  # Add site path
-                        print 'Added site:', search_path
                     return True
 
 
@@ -205,12 +204,12 @@ def run_maya():
     global boil
     boil = Boilerplate(parent=QtWidgets.QApplication.activeWindow())
     if not DOCK_WITH_MAYA_UI:
-        boil.ui.setWindowFlags(QtCore.Qt.WindowStaysOnTopHint)  # Stay on top
+        boil.ui.setWindowFlags(QtCore.Qt.Tool)  # Stay on top of Maya
+        # boil.ui.setWindowFlags(QtCore.Qt.WindowStaysOnTopHint)  # Stay on top
         # boil.ui.setWindowModality(QtCore.Qt.WindowModal)  # Modality
         boil.ui.show()  # Show the UI
     elif DOCK_WITH_MAYA_UI:
         # Dock window with Maya UI
-        print 'Docking...'
         allowedAreas = ['right', 'left']
         cmds.dockControl(WINDOW_TITLE, label=WINDOW_TITLE, area='left',
                          content=WINDOW_OBJECT, allowedArea=allowedAreas)
@@ -222,7 +221,8 @@ def run_nuke():
     global boil
     if not DOCK_WITH_NUKE_UI:
         boil = Boilerplate(parent=QtWidgets.QApplication.activeWindow())
-        boil.ui.setWindowFlags(QtCore.Qt.WindowStaysOnTopHint)  # Stay on top
+        boil.ui.setWindowFlags(QtCore.Qt.Tool)  # # Stay on top of Nuke
+        # boil.ui.setWindowFlags(QtCore.Qt.WindowStaysOnTopHint)  # Stay on top
         # boil.ui.setWindowModality(QtCore.Qt.WindowModal)  # Modality
         boil.ui.show()  # Show the UI
 
@@ -247,8 +247,6 @@ def run_standalone():
     app = QtWidgets.QApplication(sys.argv)
     global boil
     boil = Boilerplate()
-    boil.ui.setWindowFlags(QtCore.Qt.WindowStaysOnTopHint)  # Stay on top
-    # boil.ui.setWindowModality(QtCore.Qt.WindowModal)  # Modality
     boil.ui.show()  # Show the UI
     sys.exit(app.exec_())
 
