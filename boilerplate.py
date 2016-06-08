@@ -50,7 +50,7 @@ DOCK_WITH_MAYA_UI = False
 DOCK_WITH_NUKE_UI = False
 
 # Full path to where .ui files are stored
-UI_PATH = '/Users/fredrik/code/github/pyvfx-boilerplate/data'
+UI_PATH = '/Users/fredrik/code/repos/pyvfx-boilerplate/data'
 
 # Find Qt.py module and setup site-packages accordingly
 SITE_SEARCH_PATHS = [
@@ -77,13 +77,14 @@ if NUKE:
 # ----------------------------------------------------------------------
 
 def _find_qtpy(search_paths, register=False):
-    """Searches for Qt.py and register the site path if register is True"""
+    """Searches for Qt.py and registers the site path"""
     for search_path in search_paths:
         if os.path.exists(search_path):
             for item in os.listdir(search_path):
                 if item == 'Qt.py':
-                    if register:
+                    if register and search_path not in sys.path:
                         site.addsitedir(search_path)  # Add site path
+                        print 'Added site-packages from %s', search_path
                     return True
 
 
@@ -183,15 +184,19 @@ class Boilerplate(QtWidgets.QWidget):
 # DCC application helper functions
 # ----------------------------------------------------------------------
 
-def _delete_existing_ui():
+def _maya_delete_ui():
     """Delete existing UI"""
-    if MAYA:
-        if cmds.window(WINDOW_OBJECT, q=True, exists=True):
-            cmds.deleteUI(WINDOW_OBJECT)  # Delete window
-        if cmds.dockControl('MayaWindow|'+WINDOW_TITLE, q=True, ex=True):
-            cmds.deleteUI('MayaWindow|'+WINDOW_TITLE)  # Delete docked window
-    elif NUKE:
-        pass
+    if cmds.window(WINDOW_OBJECT, q=True, exists=True):
+        cmds.deleteUI(WINDOW_OBJECT)  # Delete window
+    if cmds.dockControl('MayaWindow|'+WINDOW_TITLE, q=True, ex=True):
+        cmds.deleteUI('MayaWindow|'+WINDOW_TITLE)  # Delete docked window
+
+
+def _maya_main_window():
+    """Return Maya's main window"""
+    for obj in QtWidgets.qApp.topLevelWidgets():
+        if obj.objectName() == 'MayaWindow':
+            return obj
 
 
 # ----------------------------------------------------------------------
@@ -200,9 +205,9 @@ def _delete_existing_ui():
 
 def run_maya():
     """Run in Maya"""
-    _delete_existing_ui()  # Delete any existing existing UI
+    _maya_delete_ui()  # Delete any existing existing UI
     global boil
-    boil = Boilerplate(parent=QtWidgets.QApplication.activeWindow())
+    boil = Boilerplate(parent=_maya_main_window())
     if not DOCK_WITH_MAYA_UI:
         boil.ui.setWindowFlags(QtCore.Qt.Tool)  # Stay on top of Maya
         # boil.ui.setWindowFlags(QtCore.Qt.WindowStaysOnTopHint)  # Stay on top
@@ -217,7 +222,7 @@ def run_maya():
 
 def run_nuke():
     """Run in Nuke"""
-    _delete_existing_ui()  # Delete any alrady existing UI
+    # To do: Delete any alrady existing UI
     global boil
     if not DOCK_WITH_NUKE_UI:
         boil = Boilerplate(parent=QtWidgets.QApplication.activeWindow())
