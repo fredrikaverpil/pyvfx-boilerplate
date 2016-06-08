@@ -276,12 +276,8 @@ def run_standalone():
     app = QtWidgets.QApplication(sys.argv)
     global boil
     boil = Boilerplate()
-<<<<<<< develop
-    boil.ui.show()  # Show the UIs
-=======
     palette.set_maya_palette_with_tweaks(PALETTE_FILEPATH)
     boil.ui.show()  # Show the UI
->>>>>>> Add Maya 2015 palette
     sys.exit(app.exec_())
 
 
