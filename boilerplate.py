@@ -142,6 +142,7 @@ class Boilerplate(QtWidgets.QWidget):
     from PySide/PySide2/PyQt4/PyQt5."""
     def __init__(self, parent=None):
         super(Boilerplate, self).__init__()
+
         # Filepaths
         main_window_file = os.path.join(ui_dir, 'main_window.ui')
         module_file = os.path.join(ui_dir, 'module.ui')
@@ -185,11 +186,18 @@ class Boilerplate(QtWidgets.QWidget):
 # ----------------------------------------------------------------------
 
 def _maya_delete_ui():
-    """Delete existing UI"""
+    """Delete existing UI in Maya"""
     if cmds.window(WINDOW_OBJECT, q=True, exists=True):
         cmds.deleteUI(WINDOW_OBJECT)  # Delete window
     if cmds.dockControl('MayaWindow|'+WINDOW_TITLE, q=True, ex=True):
         cmds.deleteUI('MayaWindow|'+WINDOW_TITLE)  # Delete docked window
+
+
+def _nuke_delete_ui():
+    """Delete existing UI in Nuke"""
+    for obj in QtWidgets.QApplication.allWidgets():
+        if obj.objectName() == WINDOW_OBJECT:
+            obj.deleteLater()
 
 
 def _maya_main_window():
@@ -197,6 +205,17 @@ def _maya_main_window():
     for obj in QtWidgets.qApp.topLevelWidgets():
         if obj.objectName() == 'MayaWindow':
             return obj
+    raise RuntimeError('Could not find MayaWindow instance')
+
+
+def _nuke_main_window():
+    """Returns Nuke's main window"""
+    for w in QtWidgets.qApp.topLevelWidgets():
+        if (w.inherits('QMainWindow') and
+                w.metaObject().className() == 'Foundry::UI::DockMainWindow'):
+            return w
+    else:
+        raise RuntimeError('Could not find DockMainWindow instance')
 
 
 # ----------------------------------------------------------------------
@@ -222,10 +241,10 @@ def run_maya():
 
 def run_nuke():
     """Run in Nuke"""
-    # To do: Delete any alrady existing UI
+    _nuke_delete_ui()  # Delete any alrady existing UI
     global boil
     if not DOCK_WITH_NUKE_UI:
-        boil = Boilerplate(parent=QtWidgets.QApplication.activeWindow())
+        boil = Boilerplate(parent=_nuke_main_window())
         boil.ui.setWindowFlags(QtCore.Qt.Tool)  # # Stay on top of Nuke
         # boil.ui.setWindowFlags(QtCore.Qt.WindowStaysOnTopHint)  # Stay on top
         # boil.ui.setWindowModality(QtCore.Qt.WindowModal)  # Modality
@@ -252,7 +271,7 @@ def run_standalone():
     app = QtWidgets.QApplication(sys.argv)
     global boil
     boil = Boilerplate()
-    boil.ui.show()  # Show the UI
+    boil.ui.show()  # Show the UIs
     sys.exit(app.exec_())
 
 
