@@ -146,7 +146,7 @@ from Qt import load_ui
 from boilerlib import mayapalette
 
 # Debug
-print 'Using', __binding__
+# print 'Using', __binding__
 
 
 class Boilerplate(QtWidgets.QWidget):
@@ -284,7 +284,6 @@ def run_standalone():
     app = QtWidgets.QApplication(sys.argv)
     global boil
     boil = Boilerplate()
-    print platform.system()
     if not (platform.system() == 'Darwin' and
             (__binding__ == 'PySide' or __binding__ == 'PyQt4')):
         mayapalette.set_maya_palette_with_tweaks(PALETTE_FILEPATH)
