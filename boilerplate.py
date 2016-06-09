@@ -159,8 +159,8 @@ class Boilerplate(QtWidgets.QWidget):
         module_file = os.path.join(ui_dir, 'module.ui')
 
         # Load UIs
-        self.ui = load_ui(main_window_file)  # Main window
-        self.ui.module = load_ui(module_file)  # Module
+        self.ui = load_ui(main_window_file)  # Main window UI
+        self.ui.module = load_ui(module_file)  # Module UI
 
         # Set object name and window title
         self.ui.setObjectName(WINDOW_OBJECT)
@@ -172,17 +172,17 @@ class Boilerplate(QtWidgets.QWidget):
             # Attach main UI to layout
             self.layout().addWidget(self.ui)
 
-        # Attach module to main window
-        self.ui.verticalLayout.addWidget(self.ui.module)
+        # Attach module to main window UI's boilerVerticalLayout layout
+        self.ui.boilerVerticalLayout.addWidget(self.ui.module)
 
-        # Edit widget which resides in module
+        # Edit widget which resides in module UI
         self.ui.module.label.setText('Push the button!')
 
-        # Edit widget which resides in main window
+        # Edit widget which resides in main window UI
         self.ui.pushButton.setText('Push me!')
 
         # Signals
-        # The "pushButton" widget resides in main window
+        # The "pushButton" widget resides in the main window UI
         self.ui.pushButton.clicked.connect(self.say_hello)
 
     def say_hello(self):
