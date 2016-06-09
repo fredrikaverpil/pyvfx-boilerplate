@@ -221,12 +221,38 @@ def _maya_main_window():
 
 def _nuke_main_window():
     """Returns Nuke's main window"""
-    for w in QtWidgets.qApp.topLevelWidgets():
-        if (w.inherits('QMainWindow') and
-                w.metaObject().className() == 'Foundry::UI::DockMainWindow'):
-            return w
+    for obj in QtWidgets.qApp.topLevelWidgets():
+        if (obj.inherits('QMainWindow') and
+                obj.metaObject().className() == 'Foundry::UI::DockMainWindow'):
+            return obj
     else:
         raise RuntimeError('Could not find DockMainWindow instance')
+
+
+def _nuke_set_zero_margins(widget_object):
+    """Remove Nuke margins when docked UI
+
+    .. _More info:
+        https://gist.github.com/maty974/4739917
+    """
+    parentApp = QtWidgets.QApplication.allWidgets()
+    parentWidgetList = []
+    for parent in parentApp:
+        for child in parent.children():
+            if widget_object.__class__.__name__ == child.__class__.__name__:
+                parentWidgetList.append(
+                    parent.parentWidget())
+                parentWidgetList.append(
+                    parent.parentWidget().parentWidget())
+                parentWidgetList.append(
+                    parent.parentWidget().parentWidget().parentWidget())
+
+                for sub in parentWidgetList:
+                        for tinychild in sub.children():
+                            try:
+                                tinychild.setContentsMargins(0, 0, 0, 0)
+                            except:
+                                pass
 
 
 # ----------------------------------------------------------------------
@@ -289,6 +315,7 @@ def run_nuke():
         pane = nuke.getPaneFor('Properties.1')
         panel.addToPane(pane)
         boil = panel.customKnob.getObject().widget
+        _nuke_set_zero_margins(boil)
 
 
 def run_standalone():
