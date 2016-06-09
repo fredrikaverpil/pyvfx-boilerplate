@@ -50,7 +50,8 @@ DOCK_WITH_MAYA_UI = False
 DOCK_WITH_NUKE_UI = False
 
 # Standalone-specific
-PALETTE_FILEPATH = '/Users/fredrik/code/repos/pyvfx-boilerplate/data/qpalette_maya2015.json'
+PALETTE_FILEPATH = '/Users/fredrik/code/repos/pyvfx-boilerplate/' \
+                   'data/qpalette_maya2016.json'
 
 # Full path to where .ui files are stored
 UI_PATH = '/Users/fredrik/code/repos/pyvfx-boilerplate/data'
