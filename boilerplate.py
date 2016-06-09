@@ -176,20 +176,20 @@ class Boilerplate(QtWidgets.QWidget):
         self.ui.boilerVerticalLayout.addWidget(self.ui.module)
 
         # Edit widget which resides in module UI
-        self.ui.module.label.setText('Push the button!')
+        self.ui.module.boilerLabel.setText('Push the button!')
 
         # Edit widget which resides in main window UI
-        self.ui.pushButton.setText('Push me!')
+        self.ui.boilerPushButton.setText('Push me!')
 
         # Signals
         # The "pushButton" widget resides in the main window UI
-        self.ui.pushButton.clicked.connect(self.say_hello)
+        self.ui.boilerPushButton.clicked.connect(self.say_hello)
 
     def say_hello(self):
         """Set the label text.
         The "label" widget resides in the module
         """
-        self.ui.module.label.setText('Hello world!')
+        self.ui.module.boilerLabel.setText('Hello world!')
 
 
 # ----------------------------------------------------------------------
