@@ -49,15 +49,18 @@ DOCK_WITH_MAYA_UI = False
 # Nuke-specific
 DOCK_WITH_NUKE_UI = False
 
-# Standalone-specific
-PALETTE_FILEPATH = '/Users/fredrik/code/repos/pyvfx-boilerplate/' \
-                   'data/qpalette_maya2016.json'
+# Repository path
+REPO_PATH = '/Users/fredrik/code/repos/pyvfx-boilerplate/'
+
+# Palette filepath
+PALETTE_FILEPATH = os.path.join(REPO_PATH, 'boilerdata',
+                                           'qpalette_maya2016.json')
 
 # Full path to where .ui files are stored
-UI_PATH = '/Users/fredrik/code/repos/pyvfx-boilerplate/data'
+UI_PATH = os.path.join(REPO_PATH, 'boilerdata')
 
 # Find Qt.py module and setup site-packages accordingly
-SITE_SEARCH_PATHS = [
+QTPY_SITE_SEARCH_PATHS = [
     'C:/Python27/Lib/site-packages',  # Windows
     '/usr/lib/python2.7/site-packages',  # Linux
     '/Library/Python/2.7/site-packages',  # OS X
@@ -88,7 +91,7 @@ def _find_qtpy(search_paths, register=False):
                 if item == 'Qt.py':
                     if register and search_path not in sys.path:
                         site.addsitedir(search_path)  # Add site path
-                        print 'Added site-packages from %s', search_path
+                        print 'Added site-packages from ' + search_path
                     return True
 
 
@@ -122,7 +125,11 @@ def _ui_dir(folderpath):
 ui_dir = _ui_dir(UI_PATH)
 
 # Find Qt.py module and setup site-packages accordingly
-_sitepackages_setup(SITE_SEARCH_PATHS)
+_sitepackages_setup(QTPY_SITE_SEARCH_PATHS)
+
+# Enable access to boilerlib
+if REPO_PATH not in sys.path:
+    sys.path.append(REPO_PATH)
 
 
 # ----------------------------------------------------------------------
@@ -136,7 +143,7 @@ from Qt import QtWidgets
 from Qt import __binding__
 from Qt import load_ui
 
-from lib import palette
+from boilerlib import mayapalette
 
 # Debug
 print 'Using', __binding__
@@ -277,7 +284,7 @@ def run_standalone():
     app = QtWidgets.QApplication(sys.argv)
     global boil
     boil = Boilerplate()
-    palette.set_maya_palette_with_tweaks(PALETTE_FILEPATH)
+    mayapalette.set_maya_palette_with_tweaks(PALETTE_FILEPATH)
     boil.ui.show()  # Show the UI
     sys.exit(app.exec_())
 
