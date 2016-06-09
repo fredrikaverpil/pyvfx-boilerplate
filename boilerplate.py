@@ -50,7 +50,7 @@ DOCK_WITH_MAYA_UI = False
 DOCK_WITH_NUKE_UI = False
 
 # Repository path
-REPO_PATH = '/Users/fredrik/code/repos/pyvfx-boilerplate/'
+REPO_PATH = 'C:/Users/iruser/code/repos/pyvfx-boilerplate/'
 
 # Palette filepath
 PALETTE_FILEPATH = os.path.join(REPO_PATH, 'boilerdata',
@@ -75,7 +75,7 @@ QTPY_SITE_SEARCH_PATHS = [
 # os.environ['QT_PREFERRED_BINDING'] = 'PyQt5'
 # os.environ['QT_PREFERRED_BINDING'] = 'PySide2'
 if NUKE:
-    # AvoidPri loading site-wide PyQt4/PyQt5 inside of Nuke
+    # Avoid loading site-wide PyQt4/PyQt5 inside of Nuke
     os.environ['QT_PREFERRED_BINDING'] = 'PySide'
 
 
