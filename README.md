@@ -55,7 +55,7 @@ import boilerplate
 boilerplate.run_maya()  # or boilerplate.run_nuke()
 ```
 
-You can also copy-paste the boilerplate.py contents into the script editor of Maya or Nuke and just execute it. Make sure you set the path to your .ui files prior to executing the code.
+You can also copy-paste the boilerplate.py contents into the script editor of Maya or Nuke and just execute it. Make sure you set the paths first in the `boilerplate.py` config.
 
 <br>
 
