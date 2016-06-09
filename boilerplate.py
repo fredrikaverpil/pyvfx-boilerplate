@@ -147,7 +147,7 @@ from boilerlib import mayapalette
 # print 'Using', __binding__
 
 
-class Boilerplate(QtWidgets.QWidget):
+class Boilerplate(QtWidgets.QMainWindow):
     """Example showing how UI files can be loaded using the same script
     when taking advantage of the Qt.py module and build-in methods
     from PySide/PySide2/PyQt4/PyQt5."""
@@ -159,37 +159,37 @@ class Boilerplate(QtWidgets.QWidget):
         module_file = os.path.join(ui_dir, 'module.ui')
 
         # Load UIs
-        self.ui = load_ui(main_window_file)  # Main window UI
-        self.ui.module = load_ui(module_file)  # Module UI
-
-        # Set object name and window title
-        self.ui.setObjectName(WINDOW_OBJECT)
-        self.ui.setWindowTitle(WINDOW_TITLE)
-
-        if NUKE and DOCK_WITH_NUKE_UI:
-            # Set layout to vertical layout
-            self.setLayout(QtWidgets.QVBoxLayout())
-            # Attach main UI to layout
-            self.layout().addWidget(self.ui)
+        self.main_widget = load_ui(main_window_file)  # Main window UI
+        self.module_widget = load_ui(module_file)  # Module UI
 
         # Attach module to main window UI's boilerVerticalLayout layout
-        self.ui.boilerVerticalLayout.addWidget(self.ui.module)
+        self.main_widget.boilerVerticalLayout.addWidget(self.module_widget)
 
         # Edit widget which resides in module UI
-        self.ui.module.boilerLabel.setText('Push the button!')
+        self.module_widget.boilerLabel.setText('Push the button!')
 
         # Edit widget which resides in main window UI
-        self.ui.boilerPushButton.setText('Push me!')
+        self.main_widget.boilerPushButton.setText('Push me!')
+
+        # Set the main widget
+        self.setCentralWidget(self.main_widget)
+
+        # Define minimum size of UI
+        self.setMinimumSize(200, 200)
+
+        # Set object name and window title
+        self.setObjectName(WINDOW_OBJECT)
+        self.setWindowTitle(WINDOW_TITLE)
 
         # Signals
         # The "pushButton" widget resides in the main window UI
-        self.ui.boilerPushButton.clicked.connect(self.say_hello)
+        self.main_widget.boilerPushButton.clicked.connect(self.say_hello)
 
     def say_hello(self):
         """Set the label text.
         The "label" widget resides in the module
         """
-        self.ui.module.boilerLabel.setText('Hello world!')
+        self.module_widget.boilerLabel.setText('Hello world!')
 
 
 # ----------------------------------------------------------------------
@@ -249,8 +249,8 @@ def run_maya():
     global boil
     boil = Boilerplate(parent=_maya_main_window())
     if not DOCK_WITH_MAYA_UI:
-        boil.ui.setWindowFlags(QtCore.Qt.Tool)
-        boil.ui.show()  # Show the UI
+        boil.setWindowFlags(QtCore.Qt.Tool)
+        boil.show()  # Show the UI
     elif DOCK_WITH_MAYA_UI:
         allowedAreas = ['right', 'left']
         cmds.dockControl(WINDOW_TITLE, label=WINDOW_TITLE, area='left',
@@ -273,8 +273,8 @@ def run_nuke():
     global boil
     if not DOCK_WITH_NUKE_UI:
         boil = Boilerplate(parent=_nuke_main_window())
-        boil.ui.setWindowFlags(QtCore.Qt.Tool)
-        boil.ui.show()  # Show the UI
+        boil.setWindowFlags(QtCore.Qt.Tool)
+        boil.show()  # Show the UI
     elif DOCK_WITH_NUKE_UI:
         prefix = ''
         basename = os.path.basename(__file__)
@@ -308,7 +308,7 @@ def run_standalone():
     if not (platform.system() == 'Darwin' and
             (__binding__ == 'PySide' or __binding__ == 'PyQt4')):
         mayapalette.set_maya_palette_with_tweaks(PALETTE_FILEPATH)
-    boil.ui.show()  # Show the UI
+    boil.show()  # Show the UI
     sys.exit(app.exec_())
 
 
