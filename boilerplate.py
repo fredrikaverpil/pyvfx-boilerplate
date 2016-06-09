@@ -234,33 +234,47 @@ def _nuke_main_window():
 # ----------------------------------------------------------------------
 
 def run_maya():
-    """Run in Maya"""
+    """Run in Maya
+
+    Note:
+        If you want the UI to always stay on top, replace:
+        `boil.ui.setWindowFlags(QtCore.Qt.Tool)`
+        with:
+        `boil.ui.setWindowFlags(QtCore.Qt.WindowStaysOnTopHint)`
+
+        If you want the UI to be modal:
+        `boil.ui.setWindowModality(QtCore.Qt.WindowModal)`
+    """
     _maya_delete_ui()  # Delete any existing existing UI
     global boil
     boil = Boilerplate(parent=_maya_main_window())
     if not DOCK_WITH_MAYA_UI:
-        boil.ui.setWindowFlags(QtCore.Qt.Tool)  # Stay on top of Maya
-        # boil.ui.setWindowFlags(QtCore.Qt.WindowStaysOnTopHint)  # Stay on top
-        # boil.ui.setWindowModality(QtCore.Qt.WindowModal)  # Modality
+        boil.ui.setWindowFlags(QtCore.Qt.Tool)
         boil.ui.show()  # Show the UI
     elif DOCK_WITH_MAYA_UI:
-        # Dock window with Maya UI
         allowedAreas = ['right', 'left']
         cmds.dockControl(WINDOW_TITLE, label=WINDOW_TITLE, area='left',
                          content=WINDOW_OBJECT, allowedArea=allowedAreas)
 
 
 def run_nuke():
-    """Run in Nuke"""
+    """Run in Nuke
+
+    Note:
+        If you want the UI to always stay on top, replace:
+        `boil.ui.setWindowFlags(QtCore.Qt.Tool)`
+        with:
+        `boil.ui.setWindowFlags(QtCore.Qt.WindowStaysOnTopHint)`
+
+        If you want the UI to be modal:
+        `boil.ui.setWindowModality(QtCore.Qt.WindowModal)`
+    """
     _nuke_delete_ui()  # Delete any alrady existing UI
     global boil
     if not DOCK_WITH_NUKE_UI:
         boil = Boilerplate(parent=_nuke_main_window())
-        boil.ui.setWindowFlags(QtCore.Qt.Tool)  # # Stay on top of Nuke
-        # boil.ui.setWindowFlags(QtCore.Qt.WindowStaysOnTopHint)  # Stay on top
-        # boil.ui.setWindowModality(QtCore.Qt.WindowModal)  # Modality
+        boil.ui.setWindowFlags(QtCore.Qt.Tool)
         boil.ui.show()  # Show the UI
-
     elif DOCK_WITH_NUKE_UI:
         prefix = ''
         basename = os.path.basename(__file__)
@@ -278,7 +292,16 @@ def run_nuke():
 
 
 def run_standalone():
-    """Run standalone"""
+    """Run standalone
+
+    Note:
+        Styling the UI with the Maya palette on OS X when using the
+        PySide/PyQt4 bindings result in various issues, which is why
+        it is disabled by default when you're running this combo.
+
+    .. _Issue #9:
+       https://github.com/fredrikaverpil/pyvfx-boilerplate/issues/9
+    """
     app = QtWidgets.QApplication(sys.argv)
     global boil
     boil = Boilerplate()
