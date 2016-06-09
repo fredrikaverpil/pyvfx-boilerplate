@@ -1,5 +1,22 @@
-from PySide2 import QtGui
-import pickle
+"""Set and get QPalette data from Maya
+
+# Example: fetch palette data from Maya
+data = getPaletteInfo()
+print data
+write_json(data)
+
+# Example: read palette JSON file and set palette
+data = read_json()
+print data
+setPaletteFromDict(data)
+setStylePlastique()
+setMayaTweaks()
+"""
+
+import json
+
+from PySide import QtGui
+
 
 STYLE = 'plastique'
 GROUPS = ['Disabled', 'Active', 'Inactive', 'Normal']
@@ -28,15 +45,14 @@ ROLES = [
         ]
 
 
-
-
 def getPaletteInfo():
     palette = QtGui.QApplication.palette()
 
     # ColorGroups
     groups = []
     for name in dir(QtGui.QPalette):
-        if isinstance(getattr(QtGui.QPalette, name), QtGui.QPalette.ColorGroup):
+        if isinstance(getattr(QtGui.QPalette,
+                              name), QtGui.QPalette.ColorGroup):
             if name != 'All' and name != 'NColorGroups' and name != 'Current':
                 print 'ColorGroup: ' + name
                 groups.append(name)
@@ -48,16 +64,16 @@ def getPaletteInfo():
                 print 'ColorRole: ' + name
                 roles.append(name)
 
-
-    #build a dict with all the colors
+    # build a dict with all the colors
     result = {}
     for role in ROLES:
 
         for group in GROUPS:
             qGrp = getattr(QtGui.QPalette, group)
             qRl = getattr(QtGui.QPalette, role)
-            result['%s:%s' % (role, group)] =  palette.color(qGrp, qRl).rgba()
+            result['%s:%s' % (role, group)] = palette.color(qGrp, qRl).rgba()
     return result
+
 
 def setPaletteFromDict(dct):
     palette = QtGui.QPalette()
@@ -72,6 +88,7 @@ def setPaletteFromDict(dct):
 
 def setStylePlastique():
     QtGui.QApplication.setStyle(STYLE)
+
 
 def setMayaTweaks():
     base_palette = QtGui.QApplication.palette()
@@ -94,25 +111,14 @@ def setMayaTweaks():
     for name, palette in widget_palettes.items():
         QtGui.QApplication.setPalette(palette, name)
 
+
 def write_json(data):
     with open('/Users/fredrik/Desktop/qpalette.json', 'w') as outfile:
         json.dump(data, outfile)
+
 
 def read_json():
     # read
     with open('/Users/fredrik/Desktop/qpalette.json', 'rb') as handle:
         data = json.load(handle)
     return data
-
-
-# Example: fetch palette data from Maya
-data = getPaletteInfo()
-print data
-write_json(data)
-
-# Example: read palette JSON file and set palette
-#data = read_json()
-#print data
-#setPaletteFromDict(data)
-#setStylePlastique()
-#setMayaTweaks()

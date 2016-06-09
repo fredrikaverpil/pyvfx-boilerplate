@@ -135,7 +135,7 @@ from Qt import QtWidgets
 from Qt import __binding__
 from Qt import load_ui
 
-from utils import palette
+from lib import palette
 
 # Debug
 print 'Using', __binding__
