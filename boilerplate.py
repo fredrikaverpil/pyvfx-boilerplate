@@ -137,7 +137,6 @@ if REPO_PATH not in sys.path:
 # ----------------------------------------------------------------------
 
 # Qt setup
-import Qt
 from Qt import QtCore
 # from Qt import QtGui
 from Qt import QtWidgets
@@ -287,7 +286,7 @@ def run_standalone():
     boil = Boilerplate()
     print platform.system()
     if not (platform.system() == 'Darwin' and
-            (Qt.__binding__ == 'PySide' or Qt.__binding__ == 'PyQt4')):
+            (__binding__ == 'PySide' or __binding__ == 'PyQt4')):
         mayapalette.set_maya_palette_with_tweaks(PALETTE_FILEPATH)
     boil.ui.show()  # Show the UI
     sys.exit(app.exec_())
