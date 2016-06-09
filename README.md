@@ -24,6 +24,7 @@ A boilerplate for creating PyQt4/PySide and PyQt5/PySide2 applications running i
 #### Noteworthy known issues
 
 - Does not work with Nuke 10.0v1 on OS X: [#7](https://github.com/fredrikaverpil/pyvfx-boilerplate/issues/7)
+- Maya palette glitchy in standalone mode with PySide/PyQt4 on OS X (disabled by default): [#9](https://github.com/fredrikaverpil/pyvfx-boilerplate/issues/9)
 
 <br>
 

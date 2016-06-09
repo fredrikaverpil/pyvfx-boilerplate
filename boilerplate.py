@@ -9,7 +9,7 @@ https://github.com/mottosso/Qt.py
 import sys
 import os
 import site
-
+import platform
 
 # ----------------------------------------------------------------------
 # Environment
@@ -50,7 +50,7 @@ DOCK_WITH_MAYA_UI = False
 DOCK_WITH_NUKE_UI = False
 
 # Repository path
-REPO_PATH = 'C:/Users/iruser/code/repos/pyvfx-boilerplate/'
+REPO_PATH = '/Users/fredrik/code/repos/pyvfx-boilerplate/'
 
 # Palette filepath
 PALETTE_FILEPATH = os.path.join(REPO_PATH, 'boilerdata',
@@ -137,6 +137,7 @@ if REPO_PATH not in sys.path:
 # ----------------------------------------------------------------------
 
 # Qt setup
+import Qt
 from Qt import QtCore
 # from Qt import QtGui
 from Qt import QtWidgets
@@ -284,7 +285,10 @@ def run_standalone():
     app = QtWidgets.QApplication(sys.argv)
     global boil
     boil = Boilerplate()
-    mayapalette.set_maya_palette_with_tweaks(PALETTE_FILEPATH)
+    print platform.system()
+    if not (platform.system() == 'Darwin' and
+            (Qt.__binding__ == 'PySide' or Qt.__binding__ == 'PyQt4')):
+        mayapalette.set_maya_palette_with_tweaks(PALETTE_FILEPATH)
     boil.ui.show()  # Show the UI
     sys.exit(app.exec_())
 
