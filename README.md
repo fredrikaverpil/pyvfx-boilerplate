@@ -13,7 +13,7 @@ A boilerplate for creating PyQt4/PySide and PyQt5/PySide2 applications running i
 - Requires the [`Qt.py`](https://github.com/mottosso/Qt.py) module (v0.2.5) to detect Qt bindings.
 - Uses `PySide.QUiTools` instead of `pysideuic`, which was used in v1.0.
 - No longer uses the complex "wrap instance" approach in favor for simpler code. Because of this, UIs are no longer loaded into `self`.
-- Maya palette removed (will be back soon).
+- Maya palette styling in standalone mode.
 - Git repo name change: all lowercase.
 - Pretty much PEP8 compliant.
 - Now comes with `Qt.Tool` out of the box.
