@@ -25,8 +25,6 @@ try:
     import nuke
     import nukescripts
     NUKE = True
-    NUKE_VERSION = nuke.NUKE_VERSION_STRING
-    NUKE_VERSION_MAJOR = nuke.NUKE_VERSION_MAJOR
 except ImportError:
     NUKE = False
 
