@@ -11,6 +11,8 @@ import os
 import site
 import platform
 
+sys.dont_write_bytecode = True
+
 # ----------------------------------------------------------------------
 # Environment
 # ----------------------------------------------------------------------
@@ -89,7 +91,7 @@ def _find_qtpy(search_paths, register=False):
                 if item == 'Qt.py':
                     if register and search_path not in sys.path:
                         site.addsitedir(search_path)  # Add site path
-                        print 'Added site-packages from ' + search_path
+                        print('Added site-packages from ' + search_path)
                     return True
 
 
@@ -144,7 +146,7 @@ from Qt import load_ui
 from boilerlib import mayapalette
 
 # Debug
-# print 'Using', __binding__
+# print('Using' + __binding__)
 
 
 class Boilerplate(QtWidgets.QMainWindow):

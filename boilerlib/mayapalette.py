@@ -39,11 +39,11 @@ def set_palette_from_dict(dct):
                 qRl = getattr(QtGui.QPalette, role)
                 palette.setColor(qGrp, qRl, color)
         except:
-            print 'Could not use: ' + str(palette)
+            print('Could not use: ' + str(palette))
     try:
         QtWidgets.QApplication.setPalette(palette)
     except:
-        print 'Could not set palette: ' + str(palette)
+        print('Could not set palette: ' + str(palette))
 
 
 def set_style_plastique():
@@ -78,7 +78,7 @@ def set_maya_tweaks():
 
 def read_json(filepath):
     """Read given JSON filepath into dictionary"""
-    with open(filepath, 'rb') as data_file:
+    with open(filepath, 'r') as data_file:
         data = json.load(data_file)
     return data
 
