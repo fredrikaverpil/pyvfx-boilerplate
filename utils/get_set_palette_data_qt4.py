@@ -119,6 +119,6 @@ def write_json(data):
 
 def read_json():
     # read
-    with open('/Users/fredrik/Desktop/qpalette.json', 'rb') as handle:
+    with open('/Users/fredrik/Desktop/qpalette.json', 'r') as handle:
         data = json.load(handle)
     return data

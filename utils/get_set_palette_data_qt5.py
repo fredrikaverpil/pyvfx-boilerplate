@@ -71,7 +71,7 @@ def getPaletteInfo():
         for group in GROUPS:
             qGrp = getattr(QtGui.QPalette, group)
             qRl = getattr(QtGui.QPalette, role)
-            result['%s:%s' % (role, group)] =  palette.color(qGrp, qRl).rgba()
+            result['%s:%s' % (role, group)] = palette.color(qGrp, qRl).rgba()
     return result
 
 
@@ -119,6 +119,6 @@ def write_json(data):
 
 def read_json():
     # read
-    with open('/Users/fredrik/Desktop/qpalette.json', 'rb') as handle:
+    with open('/Users/fredrik/Desktop/qpalette.json', 'r') as handle:
         data = json.load(handle)
     return data

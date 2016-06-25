@@ -46,9 +46,9 @@ def set_palette_from_dict(dct):
         print('Could not set palette: ' + str(palette))
 
 
-def set_style_plastique():
-    """Set style to plastique"""
-    QtWidgets.QApplication.setStyle("plastique")
+def set_style():
+    """Set style"""
+    QtWidgets.QApplication.setStyle("Fusion")
 
 
 def set_maya_tweaks():
@@ -87,5 +87,5 @@ def set_maya_palette_with_tweaks(palette_filepath):
     """Apply styling to current QApplication"""
     data = read_json(palette_filepath)
     set_palette_from_dict(data)
-    set_style_plastique()
+    set_style()
     set_maya_tweaks()
