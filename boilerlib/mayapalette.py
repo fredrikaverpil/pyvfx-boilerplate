@@ -48,7 +48,11 @@ def set_palette_from_dict(dct):
 
 def set_style():
     """Set style"""
-    QtWidgets.QApplication.setStyle("Fusion")
+    available_styles = QtWidgets.QStyleFactory.keys()
+    if 'Fusion' in available_styles:
+        QtWidgets.QApplication.setStyle("Fusion")
+    elif 'Plastique' in available_styles:
+        QtWidgets.QApplication.setStyle("Plastique")
 
 
 def set_maya_tweaks():
