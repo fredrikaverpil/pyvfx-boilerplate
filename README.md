@@ -11,6 +11,7 @@ A boilerplate for creating PyQt4/PySide and PyQt5/PySide2 applications running i
 
 - Complete rewrite of the boilerplate.
 - Requires the [`Qt.py`](https://github.com/mottosso/Qt.py) module (v0.2.5) to detect Qt bindings.
+- Tested with Python 2.7.11 and 3.5.1.
 - Uses `PySide.QUiTools` instead of `pysideuic`, which was used in v1.0.
 - No longer uses the complex "wrap instance" approach in favor for simpler code. Because of this, UIs are no longer loaded into `self`.
 - Maya palette styling in standalone mode.
