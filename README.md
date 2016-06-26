@@ -18,6 +18,7 @@ A boilerplate for creating PyQt4/PySide and PyQt5/PySide2 applications running i
 - Git repo name change: all lowercase.
 - Pretty much PEP8 compliant.
 - Now comes with `Qt.Tool` out of the box.
+- Writing of .pyc (bytecode) files disabled to prevent issues between Python 2 and 3.
 - Can be run in multiple ways (see examples).
 
 <br>
