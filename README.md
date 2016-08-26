@@ -17,7 +17,7 @@ A boilerplate for creating PyQt4/PySide and PyQt5/PySide2 applications running i
 - Maya palette styling in standalone mode.
 - Git repo name change: all lowercase.
 - Pretty much PEP8 compliant.
-- Now comes with `Qt.Tool` out of the box.
+- Properly parented window in Maya
 - Writing of .pyc (bytecode) files disabled to prevent issues between Python 2 and 3.
 - Can be run in multiple ways (see examples).
 
