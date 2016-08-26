@@ -154,7 +154,20 @@ class Boilerplate(QtWidgets.QMainWindow):
     when taking advantage of the Qt.py module and build-in methods
     from PySide/PySide2/PyQt4/PyQt5."""
     def __init__(self, parent=None):
-        super(Boilerplate, self).__init__()
+        super(Boilerplate, self).__init__(parent)
+
+        # Set object name and window title
+        self.setObjectName(WINDOW_OBJECT)
+        self.setWindowTitle(WINDOW_TITLE)
+
+        # Window type
+        self.setWindowFlags(QtCore.Qt.Window)
+
+        if MAYA:
+            # Makes Maya perform magic which makes the window stay
+            # on top in OS X and Linux. As an added bonus, it'll
+            # make Maya remember the window position
+            self.setProperty("saveWindowPref", True)
 
         # Filepaths
         main_window_file = os.path.join(ui_dir, 'main_window.ui')
@@ -178,10 +191,6 @@ class Boilerplate(QtWidgets.QMainWindow):
 
         # Define minimum size of UI
         self.setMinimumSize(200, 200)
-
-        # Set object name and window title
-        self.setObjectName(WINDOW_OBJECT)
-        self.setWindowTitle(WINDOW_TITLE)
 
         # Signals
         # The "pushButton" widget resides in the main window UI
@@ -262,22 +271,11 @@ def _nuke_set_zero_margins(widget_object):
 # ----------------------------------------------------------------------
 
 def run_maya():
-    """Run in Maya
-
-    Note:
-        If you want the UI to always stay on top, replace:
-        `boil.ui.setWindowFlags(QtCore.Qt.Tool)`
-        with:
-        `boil.ui.setWindowFlags(QtCore.Qt.WindowStaysOnTopHint)`
-
-        If you want the UI to be modal:
-        `boil.ui.setWindowModality(QtCore.Qt.WindowModal)`
-    """
+    """Run in Maya"""
     _maya_delete_ui()  # Delete any existing existing UI
     global boil
     boil = Boilerplate(parent=_maya_main_window())
     if not DOCK_WITH_MAYA_UI:
-        boil.setWindowFlags(QtCore.Qt.Tool)
         boil.show()  # Show the UI
     elif DOCK_WITH_MAYA_UI:
         allowedAreas = ['right', 'left']
@@ -301,7 +299,6 @@ def run_nuke():
     global boil
     if not DOCK_WITH_NUKE_UI:
         boil = Boilerplate(parent=_nuke_main_window())
-        boil.setWindowFlags(QtCore.Qt.Tool)
         boil.show()  # Show the UI
     elif DOCK_WITH_NUKE_UI:
         prefix = ''
