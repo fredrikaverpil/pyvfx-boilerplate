@@ -33,12 +33,15 @@ A boilerplate for creating PyQt4/PySide and PyQt5/PySide2 applications running i
 
 #### Installation
 
-Please note, this boilerplate requires [`Qt.py`](https://github.com/mottosso/Qt.py).
+Clone the git repository:
 
 ```bash
-git clone https://github.com/pyvfx-boilerplate.git
+git clone https://github.com/fredrikaverpil/pyvfx-boilerplate.git
 ```
 
+Edit `boilerplate.py` to make the `REPO_PATH` point to the location where you cloned the repository.
+
+<br>
 
 #### Example usage
 
