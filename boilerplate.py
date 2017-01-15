@@ -275,6 +275,12 @@ def run_maya():
     """Run in Maya"""
     _maya_delete_ui()  # Delete any existing existing UI
     boil = Boilerplate(parent=_maya_main_window())
+
+    # Makes Maya perform magic which makes the window stay
+    # on top in OS X and Linux. As an added bonus, it'll
+    # make Maya remember the window position
+    boil.setProperty("saveWindowPref", True)
+
     if not DOCK_WITH_MAYA_UI:
         boil.show()  # Show the UI
     elif DOCK_WITH_MAYA_UI:
