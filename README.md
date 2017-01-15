@@ -10,7 +10,7 @@ A boilerplate for creating PyQt4/PySide and PyQt5/PySide2 applications running i
 #### Changes from 1.0
 
 - Complete rewrite of the boilerplate.
-- Requires the [`Qt.py`](https://github.com/mottosso/Qt.py) module (v0.2.5) to detect Qt bindings.
+- Requires (and bundles) the [`Qt.py`](https://github.com/mottosso/Qt.py)
 - Tested with Python 2.7.11 and 3.5.1.
 - Uses `PySide.QUiTools` instead of `pysideuic`, which was used in v1.0.
 - No longer uses the complex "wrap instance" approach in favor for simpler code. Because of this, UIs are no longer loaded into `self`.
@@ -27,6 +27,7 @@ A boilerplate for creating PyQt4/PySide and PyQt5/PySide2 applications running i
 
 - Does not work with Nuke 10.0v1 on OS X: [#7](https://github.com/fredrikaverpil/pyvfx-boilerplate/issues/7)
 - Maya palette glitchy in standalone mode with PySide/PyQt4 on OS X (disabled by default): [#9](https://github.com/fredrikaverpil/pyvfx-boilerplate/issues/9)
+- Window will not stay on top of Nuke (OS X) without Qt.Tool or Qt.WindowStaysOnTopHint: [#12](https://github.com/fredrikaverpil/pyvfx-boilerplate/issues/12)
 
 <br>
 
@@ -36,8 +37,8 @@ Please note, this boilerplate requires [`Qt.py`](https://github.com/mottosso/Qt.
 
 ```bash
 git clone https://github.com/pyvfx-boilerplate.git
-pip install -U Qt.py
 ```
+
 
 #### Example usage
 
@@ -76,12 +77,17 @@ Since the boilerplate relies on [`Qt.py`](https://github.com/mottosso/Qt.py), yo
 Tip: when you cannot rely on `Qt.py`, create an issue (probably over at [`Qt.py`](https://github.com/mottosso/Qt.py)) and/or detect which binding is being used and write some custom code:
 
 ```python
-from Qt import __binding__
+from Qt import QtCompat
 
-if __binding__.startswith('PyQt'):
-    ...
-elif __binding.startswith('PySide'):
-    ...
+if QtCompat.__binding__ in ('PyQt4', 'PySide'):
+    # Do something if PyQt4 or PySide is used
+
+if QtCompat__binding.startswith('PySide'):
+    # Do something if PySide or PySide2 is used
+
+if QtCompat__binding == 'PySide2':
+    # Do something if PySide2 is used
+
 ```
 
 #### Issues
