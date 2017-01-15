@@ -246,6 +246,7 @@ def run_nuke():
     _nuke_delete_ui()  # Delete any alrady existing UI
     if not DOCK_WITH_NUKE_UI:
         boil = Boilerplate(parent=_nuke_main_window())
+        boil.setWindowFlags(QtCore.Qt.Tool)
         boil.show()  # Show the UI
     elif DOCK_WITH_NUKE_UI:
         prefix = ''
