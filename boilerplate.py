@@ -73,26 +73,23 @@ if NUKE:
 # Set up Python modules access
 # ----------------------------------------------------------------------
 
-# Enable access to boilerlib
+# Enable access to boilerlib (Qt.py, mayapalette)
 if REPO_PATH not in sys.path:
     sys.path.append(REPO_PATH)
-
 
 # ----------------------------------------------------------------------
 # Main script
 # ----------------------------------------------------------------------
 
-# Qt setup
-from Qt import QtCore
-# from Qt import QtGui
-from Qt import QtWidgets
-from Qt import __binding__
-from Qt import load_ui
+from boilerlib.Qt import QtWidgets  # pylint: disable=E0611
+from boilerlib.Qt import QtCore  # pylint: disable=E0611
+from boilerlib.Qt import QtCompat
 
 from boilerlib import mayapalette
 
+
 # Debug
-# print('Using' + __binding__)
+# print('Using' + QtCompat.__binding__)
 
 
 class Boilerplate(QtWidgets.QMainWindow):
@@ -121,8 +118,8 @@ class Boilerplate(QtWidgets.QMainWindow):
         module_file = os.path.join(UI_PATH, 'module.ui')
 
         # Load UIs
-        self.main_widget = load_ui(main_window_file)  # Main window UI
-        self.module_widget = load_ui(module_file)  # Module UI
+        self.main_widget = QtCompat.load_ui(main_window_file)  # Main window UI
+        self.module_widget = QtCompat.load_ui(module_file)  # Module UI
 
         # Attach module to main window UI's boilerVerticalLayout layout
         self.main_widget.boilerVerticalLayout.addWidget(self.module_widget)
@@ -282,7 +279,7 @@ def run_standalone():
     app = QtWidgets.QApplication(sys.argv)
     boil = Boilerplate()
     if not (platform.system() == 'Darwin' and
-            (__binding__ == 'PySide' or __binding__ == 'PyQt4')):
+            (QtCompat.__binding__ == 'PySide' or QtCompat.__binding__ == 'PyQt4')):
         mayapalette.set_maya_palette_with_tweaks(PALETTE_FILEPATH)
     boil.show()  # Show the UI
     sys.exit(app.exec_())
