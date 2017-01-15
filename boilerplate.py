@@ -8,13 +8,12 @@ https://github.com/mottosso/Qt.py
 
 import sys
 import os
-import site
 import platform
 
-sys.dont_write_bytecode = True
+sys.dont_write_bytecode = True  # Avoid writing .pyc files
 
 # ----------------------------------------------------------------------
-# Environment
+# Environment detection
 # ----------------------------------------------------------------------
 
 try:
