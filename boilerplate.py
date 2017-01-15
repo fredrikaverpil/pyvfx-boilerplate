@@ -153,6 +153,7 @@ class Boilerplate(QtWidgets.QMainWindow):
     """Example showing how UI files can be loaded using the same script
     when taking advantage of the Qt.py module and build-in methods
     from PySide/PySide2/PyQt4/PyQt5."""
+
     def __init__(self, parent=None):
         super(Boilerplate, self).__init__(parent)
 
@@ -211,8 +212,8 @@ def _maya_delete_ui():
     """Delete existing UI in Maya"""
     if cmds.window(WINDOW_OBJECT, q=True, exists=True):
         cmds.deleteUI(WINDOW_OBJECT)  # Delete window
-    if cmds.dockControl('MayaWindow|'+WINDOW_TITLE, q=True, ex=True):
-        cmds.deleteUI('MayaWindow|'+WINDOW_TITLE)  # Delete docked window
+    if cmds.dockControl('MayaWindow|' + WINDOW_TITLE, q=True, ex=True):
+        cmds.deleteUI('MayaWindow|' + WINDOW_TITLE)  # Delete docked window
 
 
 def _nuke_delete_ui():
@@ -259,11 +260,11 @@ def _nuke_set_zero_margins(widget_object):
                     parent.parentWidget().parentWidget().parentWidget())
 
                 for sub in parentWidgetList:
-                        for tinychild in sub.children():
-                            try:
-                                tinychild.setContentsMargins(0, 0, 0, 0)
-                            except:
-                                pass
+                    for tinychild in sub.children():
+                        try:
+                            tinychild.setContentsMargins(0, 0, 0, 0)
+                        except:
+                            pass
 
 
 # ----------------------------------------------------------------------
@@ -273,7 +274,6 @@ def _nuke_set_zero_margins(widget_object):
 def run_maya():
     """Run in Maya"""
     _maya_delete_ui()  # Delete any existing existing UI
-    global boil
     boil = Boilerplate(parent=_maya_main_window())
     if not DOCK_WITH_MAYA_UI:
         boil.show()  # Show the UI
@@ -296,7 +296,6 @@ def run_nuke():
         `boil.ui.setWindowModality(QtCore.Qt.WindowModal)`
     """
     _nuke_delete_ui()  # Delete any alrady existing UI
-    global boil
     if not DOCK_WITH_NUKE_UI:
         boil = Boilerplate(parent=_nuke_main_window())
         boil.show()  # Show the UI
@@ -307,10 +306,10 @@ def run_nuke():
         if __name__ == module_name:
             prefix = module_name + '.'
         panel = nukescripts.panels.registerWidgetAsPanel(
-                    widget=prefix + 'Boilerplate',  # module_name.Class_name
-                    name=WINDOW_TITLE,
-                    id='uk.co.thefoundry.' + WINDOW_TITLE,
-                    create=True)
+            widget=prefix + 'Boilerplate',  # module_name.Class_name
+            name=WINDOW_TITLE,
+            id='uk.co.thefoundry.' + WINDOW_TITLE,
+            create=True)
         pane = nuke.getPaneFor('Properties.1')
         panel.addToPane(pane)
         boil = panel.customKnob.getObject().widget
@@ -329,7 +328,6 @@ def run_standalone():
        https://github.com/fredrikaverpil/pyvfx-boilerplate/issues/9
     """
     app = QtWidgets.QApplication(sys.argv)
-    global boil
     boil = Boilerplate()
     if not (platform.system() == 'Darwin' and
             (__binding__ == 'PySide' or __binding__ == 'PyQt4')):
