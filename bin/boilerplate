@@ -6,4 +6,5 @@ from boilerlib import boilerplateUI
 sys.dont_write_bytecode = True  # Avoid writing .pyc files
 
 if __name__ == "__main__":
-    boilerplateUI.run_main()
+    bpr = boilerplateUI.BoilerplateRunner(boilerplateUI.Boilerplate)
+    bpr.run_main()

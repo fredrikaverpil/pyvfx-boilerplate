@@ -35,10 +35,6 @@ sys.dont_write_bytecode = True  # Avoid writing .pyc files
 # Configuration
 # ----------------------------------------------------------------------
 
-# Window title and object names
-WINDOW_TITLE = 'Boilerplate'
-WINDOW_OBJECT = 'boilerPlate'
-
 # Full path to where .ui files are stored
 UI_PATH = os.path.join(os.path.dirname(__file__), 'resources')
 
@@ -56,12 +52,12 @@ class Boilerplate(QtWidgets.QMainWindow):
     when taking advantage of the Qt.py module and build-in methods
     from PySide/PySide2/PyQt4/PyQt5."""
 
-    def __init__(self, parent=None):
+    def __init__(self, parent=None, win_title='Boilerplate', win_object='boilerPlate'):
         super(Boilerplate, self).__init__(parent)
 
         # Set object name and window title
-        self.setObjectName(WINDOW_OBJECT)
-        self.setWindowTitle(WINDOW_TITLE)
+        self.setObjectName(win_object)
+        self.setWindowTitle(win_title)
 
         # Window type
         self.setWindowFlags(QtCore.Qt.Window)
@@ -72,6 +68,9 @@ class Boilerplate(QtWidgets.QMainWindow):
             # make Maya remember the window position
             self.setProperty("saveWindowPref", True)
 
+        self.setupUi()
+
+    def setupUi(self):
         # Filepaths
         main_window_file = os.path.join(UI_PATH, 'main_window.ui')
         module_file = os.path.join(UI_PATH, 'module.ui')
@@ -86,7 +85,7 @@ class Boilerplate(QtWidgets.QMainWindow):
         # Edit widget which resides in module UI
         self.module_widget.boilerLabel.setText('Push the button!')
 
-        # Edit widget which resides in main window UI
+        # Edit widget which reside in main window UI
         self.main_widget.boilerPushButton.setText('Push me!')
 
         # Set the main widget
@@ -107,22 +106,23 @@ class Boilerplate(QtWidgets.QMainWindow):
         self.module_widget.boilerLabel.update()
 
 
+
+
 # ----------------------------------------------------------------------
 # DCC application helper functions
 # ----------------------------------------------------------------------
-
-def _maya_delete_ui():
+def _maya_delete_ui(window_title, window_object):
     """Delete existing UI in Maya"""
-    if cmds.window(WINDOW_OBJECT, q=True, exists=True):
-        cmds.deleteUI(WINDOW_OBJECT)  # Delete window
-    if cmds.dockControl('MayaWindow|' + WINDOW_TITLE, q=True, ex=True):
-        cmds.deleteUI('MayaWindow|' + WINDOW_TITLE)  # Delete docked window
+    if cmds.window(window_object, q=True, exists=True):
+        cmds.deleteUI(window_object)  # Delete window
+    if cmds.dockControl('MayaWindow|' + window_title, q=True, ex=True):
+        cmds.deleteUI('MayaWindow|' + window_title)  # Delete docked window
 
 
-def _nuke_delete_ui():
+def _nuke_delete_ui(window_object):
     """Delete existing UI in Nuke"""
     for obj in QtWidgets.QApplication.allWidgets():
-        if obj.objectName() == WINDOW_OBJECT:
+        if obj.objectName() == window_object:
             obj.deleteLater()
 
 
@@ -169,90 +169,93 @@ def _nuke_set_zero_margins(widget_object):
                         except:
                             pass
 
-
 # ----------------------------------------------------------------------
 # Run functions
 # ----------------------------------------------------------------------
 
-def run_maya(dockable=False):
-    """Run in Maya"""
-    _maya_delete_ui()  # Delete any existing existing UI
-    boil = Boilerplate(parent=_maya_main_window())
+class BoilerplateRunner():
 
-    # Makes Maya perform magic which makes the window stay
-    # on top in OS X and Linux. As an added bonus, it'll
-    # make Maya remember the window position
-    boil.setProperty("saveWindowPref", True)
+    def __init__(self, guiClass=Boilerplate,win_title='Boilerplate', win_object='boilerPlate'):
 
-    if dockable:
-        allowed_areas = ['right', 'left']
-        cmds.dockControl(WINDOW_TITLE, label=WINDOW_TITLE, area='left',
-                         content=WINDOW_OBJECT, allowedArea=allowed_areas)
-    else:
+        self.guiClass = guiClass
+        self.window_title = win_title
+        self.window_object = win_object
+
+    def run_maya(self, dockable=False):
+        """Run in Maya"""
+        _maya_delete_ui(self.window_title, self.window_object)  # Delete any existing existing UI
+        boil = self.guiClass(_maya_main_window(),self.window_title, self.window_object)
+
+        # Makes Maya perform magic which makes the window stay
+        # on top in OS X and Linux. As an added bonus, it'll
+        # make Maya remember the window position
+        boil.setProperty("saveWindowPref", True)
+
+        if dockable:
+            allowed_areas = ['right', 'left']
+            cmds.dockControl(self.window_title, label=self.window_title, area='left',
+                             content=self.window_object, allowedArea=allowed_areas)
+        else:
+            boil.show()  # Show the UI
+
+
+    def run_nuke(self, dockable=False):
+        """Run in Nuke
+
+        Note:
+            If you want the UI to always stay on top, replace:
+            `boil.ui.setWindowFlags(QtCore.Qt.Tool)`
+            with:
+            `boil.ui.setWindowFlags(QtCore.Qt.WindowStaysOnTopHint)`
+
+            If you want the UI to be modal:
+            `boil.ui.setWindowModality(QtCore.Qt.WindowModal)`
+        """
+        _nuke_delete_ui(self.window_object)  # Delete any alrady existing UI
+        if dockable:
+            basename = os.path.basename(__file__)
+            module_name = os.path.splitext(basename)[0]
+            widget = module_name + '.' + self.guiClass.__name__
+            panel = nukescripts.panels.registerWidgetAsPanel(
+                widget=widget ,  # module_name.Class_name
+                name=self.window_title,
+                id='uk.co.thefoundry.' + self.window_title,
+                create=True)
+            pane = nuke.getPaneFor('Properties.1')
+            panel.addToPane(pane)
+            boil = panel.customKnob.getObject().widget
+            _nuke_set_zero_margins(boil)
+        else:
+            boil = self.guiClass(_nuke_main_window(),self.window_title, self.window_object)
+            boil.setWindowFlags(QtCore.Qt.Tool)
+            boil.show()  # Show the UI
+
+
+    def run_standalone(self):
+        """Run standalone
+
+        Note:
+            Styling the UI with the Maya palette on OS X when using the
+            PySide/PyQt4 bindings result in various issues, which is why
+            it is disabled by default when you're running this combo.
+
+        .. _Issue #9:
+           https://github.com/fredrikaverpil/pyvfx-boilerplate/issues/9
+        """
+        app = QtWidgets.QApplication(sys.argv)
+        boil = self.guiClass(win_title=self.window_title, win_object=self.window_object)
+        if not (platform.system() == 'Darwin' and
+                (Qt.IsPySide or Qt.IsPyQt4)):
+            mayapalette.set_maya_palette_with_tweaks(PALETTE_FILEPATH)
         boil.show()  # Show the UI
+        sys.exit(app.exec_())
 
 
-def run_nuke(dockable=False):
-    """Run in Nuke
-
-    Note:
-        If you want the UI to always stay on top, replace:
-        `boil.ui.setWindowFlags(QtCore.Qt.Tool)`
-        with:
-        `boil.ui.setWindowFlags(QtCore.Qt.WindowStaysOnTopHint)`
-
-        If you want the UI to be modal:
-        `boil.ui.setWindowModality(QtCore.Qt.WindowModal)`
-    """
-    _nuke_delete_ui()  # Delete any alrady existing UI
-    if dockable:
-        basename = os.path.basename(__file__)
-        module_name = os.path.splitext(basename)[0]
-        prefix = module_name + '.'
-        panel = nukescripts.panels.registerWidgetAsPanel(
-            widget=prefix + WINDOW_TITLE ,  # module_name.Class_name
-            name=WINDOW_TITLE,
-            id='uk.co.thefoundry.' + WINDOW_TITLE,
-            create=True)
-        pane = nuke.getPaneFor('Properties.1')
-        panel.addToPane(pane)
-        boil = panel.customKnob.getObject().widget
-        _nuke_set_zero_margins(boil)
-    else:
-        boil = Boilerplate(parent=_nuke_main_window())
-        boil.setWindowFlags(QtCore.Qt.Tool)
-        boil.show()  # Show the UI
-
-
-def run_standalone():
-    """Run standalone
-
-    Note:
-        Styling the UI with the Maya palette on OS X when using the
-        PySide/PyQt4 bindings result in various issues, which is why
-        it is disabled by default when you're running this combo.
-
-    .. _Issue #9:
-       https://github.com/fredrikaverpil/pyvfx-boilerplate/issues/9
-    """
-    app = QtWidgets.QApplication(sys.argv)
-    boil = Boilerplate()
-    if not (platform.system() == 'Darwin' and
-            (Qt.IsPySide or Qt.IsPyQt4)):
-        mayapalette.set_maya_palette_with_tweaks(PALETTE_FILEPATH)
-    boil.show()  # Show the UI
-    sys.exit(app.exec_())
-
-
-def run_main(dockable=False):
-    """Run appropriate gui"""
-    if MAYA:
-        run_maya(dockable)
-    elif NUKE:
-        run_nuke(dockable)
-    else:
-        run_standalone()
-
-
-if __name__ == "__main__":
-    run_main()
+    def run_main(self, dockable=False):
+        """Run appropriate gui"""
+        if MAYA:
+            self.run_maya(dockable)
+        elif NUKE:
+            self.run_nuke(dockable)
+        else:
+            self.run_standalone()
