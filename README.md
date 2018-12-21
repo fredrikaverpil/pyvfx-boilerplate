@@ -5,7 +5,44 @@ A boilerplate for creating PyQt4/PySide and PyQt5/PySide2 applications running i
 
 ## Documentation
 
-### Version 2.x
+
+
+### Version ?
+
+#### Changes from 2.0 (nzanepro fork)
+
+- Updated to work with latest Qt.py (1.2.0b2)
+- Tested with maya (2018.4), nuke (11.2v4), and PySide2 (5.11.2)
+- Install via pip and you will get Qt.py installed as a dependency (see below)
+
+- Example new app via inheritance of Boilerplate:
+```python
+import sys
+import os
+import platform
+
+from Qt import QtCompat
+from boilerlib import boilerplateUI
+
+
+class myPlate(boilerplateUI.Boilerplate):
+    def __init__(self, parent=None, win_title='defaultTitle', win_object='defaultObject'):
+        super(myPlate, self).__init__(parent, win_title, win_object)
+
+    def setupUi(self):
+        main_window_file = os.path.join('uifile.ui')
+        self.main_widget = QtCompat.load_ui(main_window_file)
+        self.setCentralWidget(self.main_widget)
+        self.main_widget.pushButton.clicked.connect(self.say_hello)
+
+    def say_hello(self):
+        print('Hello world!')
+
+
+if __name__ == "__main__":
+    bpr = boilerplateUI.BoilerplateRunner(guiClass=myPlate, win_title='Myplate', win_object='myPlate')
+    bpr.run_main()
+```
 
 #### Changes from 1.0
 
@@ -33,22 +70,26 @@ A boilerplate for creating PyQt4/PySide and PyQt5/PySide2 applications running i
 
 #### Installation
 
-Clone the git repository:
-
+easy way:
 ```bash
-git clone https://github.com/fredrikaverpil/pyvfx-boilerplate.git
+pip install git+https://github.com/nzanepro/pyvfx-boilerplate
 ```
-
-Edit `boilerplate.py` to make the `REPO_PATH` point to the location where you cloned the repository.
+long way:
+```bash
+git clone https://github.com/nzanepro/pyvfx-boilerplate
+cd pyvfx-boilerplate
+python setup.py sdist bdist_wheel
+pip install dist/*
+```
 
 <br>
 
 #### Example usage
 
-Run as standalone:
+Pip installs a program named `boilerplate` as an example Run as standalone:
 
-```python
-python boilerplate.py
+```bash
+boilerplate
 ```
 
 Run in script editor of Maya or Nuke:
@@ -56,20 +97,16 @@ Run in script editor of Maya or Nuke:
 ```python
 import sys
 sys.path.append('/path/to/pyvfx-boilerplate')
-import boilerplate
-
-boilerplate.run_maya()  # or boilerplate.run_nuke()
+from boilerlib import boilerplateUI
+bpr = boilerplateUI.BoilerplateRunner()
+bpr.run_main()
 ```
-
-You can also copy-paste the boilerplate.py contents into the script editor of Maya or Nuke and just execute it. Make sure you set the paths first in the `boilerplate.py` config.
 
 <br>
 
 #### Modifying the boilerplate
 
-- Open up `boilerplate.py` and scroll down to the `# Configuration` section and review the settings.
-- Rename every occurance of `boil` in the code to reflect a unique name for your application.
-- Change the class `Boilerplate` to your heart's content!
+- see inheritance example above
 
 <br>
 
