@@ -9,12 +9,12 @@ https://github.com/mottosso/Qt.py
 import sys
 import os
 import platform
+import Qt
+from Qt import QtWidgets  # pylint: disable=E0611
+from Qt import QtCore  # pylint: disable=E0611
+from Qt import QtCompat
 
-sys.dont_write_bytecode = True  # Avoid writing .pyc files
-
-# ----------------------------------------------------------------------
-# Environment detection
-# ----------------------------------------------------------------------
+import mayapalette
 
 try:
     import maya.cmds as cmds
@@ -29,10 +29,7 @@ try:
 except ImportError:
     NUKE = False
 
-STANDALONE = False
-if not MAYA and not NUKE:
-    STANDALONE = True
-
+sys.dont_write_bytecode = True  # Avoid writing .pyc files
 
 # ----------------------------------------------------------------------
 # Configuration
@@ -42,53 +39,16 @@ if not MAYA and not NUKE:
 WINDOW_TITLE = 'Boilerplate'
 WINDOW_OBJECT = 'boilerPlate'
 
-# Maya-specific
-DOCK_WITH_MAYA_UI = False
-
-# Nuke-specific
-DOCK_WITH_NUKE_UI = False
-
-# Repository path
-REPO_PATH = '/Users/fredrik/code/repos/pyvfx-boilerplate/'
+# Full path to where .ui files are stored
+UI_PATH = os.path.join(os.path.dirname(__file__), 'resources')
 
 # Palette filepath
 PALETTE_FILEPATH = os.path.join(
-    REPO_PATH, 'boilerdata', 'qpalette_maya2016.json')
-
-# Full path to where .ui files are stored
-UI_PATH = os.path.join(REPO_PATH, 'boilerdata')
-
-# Qt.py option: Set up preffered binding
-# os.environ['QT_PREFERRED_BINDING'] = 'PyQt4'
-# os.environ['QT_PREFERRED_BINDING'] = 'PySide'
-# os.environ['QT_PREFERRED_BINDING'] = 'PyQt5'
-# os.environ['QT_PREFERRED_BINDING'] = 'PySide2'
-if NUKE:
-    # Avoid loading site-wide PyQt4/PyQt5 inside of Nuke
-    os.environ['QT_PREFERRED_BINDING'] = 'PySide'
-
-
-# ----------------------------------------------------------------------
-# Set up Python modules access
-# ----------------------------------------------------------------------
-
-# Enable access to boilerlib (Qt.py, mayapalette)
-if REPO_PATH not in sys.path:
-    sys.path.append(REPO_PATH)
+    UI_PATH, 'qpalette_maya2016.json')
 
 # ----------------------------------------------------------------------
 # Main script
 # ----------------------------------------------------------------------
-
-from boilerlib.Qt import QtWidgets  # pylint: disable=E0611
-from boilerlib.Qt import QtCore  # pylint: disable=E0611
-from boilerlib.Qt import QtCompat
-
-from boilerlib import mayapalette
-
-
-# Debug
-# print('Using' + QtCompat.__binding__)
 
 
 class Boilerplate(QtWidgets.QMainWindow):
@@ -144,6 +104,7 @@ class Boilerplate(QtWidgets.QMainWindow):
         The "label" widget resides in the module
         """
         self.module_widget.boilerLabel.setText('Hello world!')
+        self.module_widget.boilerLabel.update()
 
 
 # ----------------------------------------------------------------------
@@ -167,7 +128,7 @@ def _nuke_delete_ui():
 
 def _maya_main_window():
     """Return Maya's main window"""
-    for obj in QtWidgets.qApp.topLevelWidgets():
+    for obj in QtWidgets.QApplication.instance().topLevelWidgets():
         if obj.objectName() == 'MayaWindow':
             return obj
     raise RuntimeError('Could not find MayaWindow instance')
@@ -175,7 +136,7 @@ def _maya_main_window():
 
 def _nuke_main_window():
     """Returns Nuke's main window"""
-    for obj in QtWidgets.qApp.topLevelWidgets():
+    for obj in QtWidgets.QApplication.instance().topLevelWidgets():
         if (obj.inherits('QMainWindow') and
                 obj.metaObject().className() == 'Foundry::UI::DockMainWindow'):
             return obj
@@ -213,7 +174,7 @@ def _nuke_set_zero_margins(widget_object):
 # Run functions
 # ----------------------------------------------------------------------
 
-def run_maya():
+def run_maya(dockable=False):
     """Run in Maya"""
     _maya_delete_ui()  # Delete any existing existing UI
     boil = Boilerplate(parent=_maya_main_window())
@@ -223,15 +184,15 @@ def run_maya():
     # make Maya remember the window position
     boil.setProperty("saveWindowPref", True)
 
-    if not DOCK_WITH_MAYA_UI:
-        boil.show()  # Show the UI
-    elif DOCK_WITH_MAYA_UI:
+    if dockable:
         allowed_areas = ['right', 'left']
         cmds.dockControl(WINDOW_TITLE, label=WINDOW_TITLE, area='left',
                          content=WINDOW_OBJECT, allowedArea=allowed_areas)
+    else:
+        boil.show()  # Show the UI
 
 
-def run_nuke():
+def run_nuke(dockable=False):
     """Run in Nuke
 
     Note:
@@ -244,18 +205,12 @@ def run_nuke():
         `boil.ui.setWindowModality(QtCore.Qt.WindowModal)`
     """
     _nuke_delete_ui()  # Delete any alrady existing UI
-    if not DOCK_WITH_NUKE_UI:
-        boil = Boilerplate(parent=_nuke_main_window())
-        boil.setWindowFlags(QtCore.Qt.Tool)
-        boil.show()  # Show the UI
-    elif DOCK_WITH_NUKE_UI:
-        prefix = ''
+    if dockable:
         basename = os.path.basename(__file__)
-        module_name = basename[: basename.rfind('.')]
-        if __name__ == module_name:
-            prefix = module_name + '.'
+        module_name = os.path.splitext(basename)[0]
+        prefix = module_name + '.'
         panel = nukescripts.panels.registerWidgetAsPanel(
-            widget=prefix + 'Boilerplate',  # module_name.Class_name
+            widget=prefix + WINDOW_TITLE ,  # module_name.Class_name
             name=WINDOW_TITLE,
             id='uk.co.thefoundry.' + WINDOW_TITLE,
             create=True)
@@ -263,6 +218,10 @@ def run_nuke():
         panel.addToPane(pane)
         boil = panel.customKnob.getObject().widget
         _nuke_set_zero_margins(boil)
+    else:
+        boil = Boilerplate(parent=_nuke_main_window())
+        boil.setWindowFlags(QtCore.Qt.Tool)
+        boil.show()  # Show the UI
 
 
 def run_standalone():
@@ -279,16 +238,21 @@ def run_standalone():
     app = QtWidgets.QApplication(sys.argv)
     boil = Boilerplate()
     if not (platform.system() == 'Darwin' and
-            (QtCompat.__binding__ == 'PySide' or QtCompat.__binding__ == 'PyQt4')):
+            (Qt.IsPySide or Qt.IsPyQt4)):
         mayapalette.set_maya_palette_with_tweaks(PALETTE_FILEPATH)
     boil.show()  # Show the UI
     sys.exit(app.exec_())
 
 
-if __name__ == "__main__":
+def run_main(dockable=False):
+    """Run appropriate gui"""
     if MAYA:
-        run_maya()
+        run_maya(dockable)
     elif NUKE:
-        run_nuke()
+        run_nuke(dockable)
     else:
         run_standalone()
+
+
+if __name__ == "__main__":
+    run_main()
