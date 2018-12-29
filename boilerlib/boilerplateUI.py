@@ -213,11 +213,9 @@ class BoilerplateRunner():
         """
         _nuke_delete_ui(self.window_object)  # Delete any alrady existing UI
         if dockable:
-            basename = os.path.basename(__file__)
-            module_name = os.path.splitext(basename)[0]
-            widget = module_name + '.' + self.guiClass.__name__
+            widgetname = self.guiClass.__module__.split('.')[-1] + "." + self.guiClass.__name__
             panel = nukescripts.panels.registerWidgetAsPanel(
-                widget=widget ,  # module_name.Class_name
+                widget=widgetname ,  # module_name.Class_name
                 name=self.window_title,
                 id='uk.co.thefoundry.' + self.window_title,
                 create=True)
