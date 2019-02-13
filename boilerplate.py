@@ -49,7 +49,7 @@ DOCK_WITH_MAYA_UI = False
 DOCK_WITH_NUKE_UI = False
 
 # Repository path
-REPO_PATH = '/Users/fredrik/code/repos/pyvfx-boilerplate/'
+REPO_PATH = os.path.dirname(__file__)
 
 # Palette filepath
 PALETTE_FILEPATH = os.path.join(
