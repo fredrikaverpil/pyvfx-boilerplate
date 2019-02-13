@@ -39,8 +39,6 @@ Clone the git repository:
 git clone https://github.com/fredrikaverpil/pyvfx-boilerplate.git
 ```
 
-Edit `boilerplate.py` to make the `REPO_PATH` point to the location where you cloned the repository.
-
 <br>
 
 #### Example usage
