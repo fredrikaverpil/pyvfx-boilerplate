@@ -22,7 +22,7 @@ import os
 import platform
 
 from Qt import QtCompat
-from boilerlib import boilerplateUI
+from pyvfx.boilerlib import boilerplateUI
 
 
 class myPlate(boilerplateUI.Boilerplate):
