@@ -106,8 +106,6 @@ class Boilerplate(QtWidgets.QMainWindow):
         self.module_widget.boilerLabel.update()
 
 
-
-
 # ----------------------------------------------------------------------
 # DCC application helper functions
 # ----------------------------------------------------------------------
@@ -169,13 +167,13 @@ def _nuke_set_zero_margins(widget_object):
                         except:
                             pass
 
+
 # ----------------------------------------------------------------------
 # Run functions
 # ----------------------------------------------------------------------
-
 class BoilerplateRunner():
 
-    def __init__(self, guiClass=Boilerplate,win_title='Boilerplate', win_object='boilerPlate'):
+    def __init__(self, guiClass=Boilerplate, win_title='Boilerplate', win_object='boilerPlate'):
 
         self.guiClass = guiClass
         self.window_title = win_title
@@ -184,7 +182,7 @@ class BoilerplateRunner():
     def run_maya(self, dockable=False):
         """Run in Maya"""
         _maya_delete_ui(self.window_title, self.window_object)  # Delete any existing existing UI
-        boil = self.guiClass(_maya_main_window(),self.window_title, self.window_object)
+        boil = self.guiClass(_maya_main_window(), self.window_title, self.window_object)
 
         # Makes Maya perform magic which makes the window stay
         # on top in OS X and Linux. As an added bonus, it'll
@@ -197,7 +195,6 @@ class BoilerplateRunner():
                              content=self.window_object, allowedArea=allowed_areas)
         else:
             boil.show()  # Show the UI
-
 
     def run_nuke(self, dockable=False):
         """Run in Nuke
@@ -213,9 +210,11 @@ class BoilerplateRunner():
         """
         _nuke_delete_ui(self.window_object)  # Delete any alrady existing UI
         if dockable:
-            widgetname = self.guiClass.__module__.split('.')[-1] + "." + self.guiClass.__name__
+            nuke.tprint(self.guiClass.__module__)
+            nuke.tprint(self.guiClass.__name__)
+            widgetname = self.guiClass.__module__ + "." + self.guiClass.__name__
             panel = nukescripts.panels.registerWidgetAsPanel(
-                widget=widgetname ,  # module_name.Class_name
+                widget=widgetname,  # module_name.Class_name
                 name=self.window_title,
                 id='uk.co.thefoundry.' + self.window_title,
                 create=True)
@@ -224,10 +223,9 @@ class BoilerplateRunner():
             boil = panel.customKnob.getObject().widget
             _nuke_set_zero_margins(boil)
         else:
-            boil = self.guiClass(_nuke_main_window(),self.window_title, self.window_object)
+            boil = self.guiClass(_nuke_main_window(), self.window_title, self.window_object)
             boil.setWindowFlags(QtCore.Qt.Tool)
             boil.show()  # Show the UI
-
 
     def run_standalone(self):
         """Run standalone
@@ -247,7 +245,6 @@ class BoilerplateRunner():
             mayapalette.set_maya_palette_with_tweaks(PALETTE_FILEPATH)
         boil.show()  # Show the UI
         sys.exit(app.exec_())
-
 
     def run_main(self, dockable=False):
         """Run appropriate gui"""

@@ -4,22 +4,24 @@ with open("README.md", "r") as fh:
     long_description = fh.read()
 
 setuptools.setup(
-    name="boilerlib",
-    version="0.0.1",
-    author="Fredrik Averpil",
-    author_email="fredrik@averpil.com",
+    name="pyvfx.boilerlib",
+    version="0.0.4",
+    #author="Fredrik Averpil",
+    #author_email="fredrik@averpil.com",
+    author="Zachary Cole",
+    author_email="zcole@nzaneproductions.com",
     description="A boilerplate Py* app that runs inside of Maya, Nuke, python2, or python3",
     long_description=long_description,
     long_description_content_type="text/markdown",
-    url="https://github.com/fredrikaverpil/pyvfx-boilerplate",
+    #url="https://github.com/fredrikaverpil/pyvfx-boilerplate",
+    url="https://github.com/nzanepro/pyvfx.boilerplate",
     packages=setuptools.find_packages(),
     include_package_data=True,
     scripts=[
-             'bin/boilerplate',
+             'bin/pyvfx.boilerlibUI',
              ],
     install_requires=[
                       'Qt.py',
-                      'PySide2',
                         ],
     classifiers=[
         "Programming Language :: Python :: 2.7",

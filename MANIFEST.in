@@ -1,4 +1,4 @@
-include boilerlib/resources/main_window.ui
-include boilerlib/resources/module.ui
-include boilerlib/resources/qpalette_maya2015.json
-include boilerlib/resources/qpalette_maya2016.json
+include pyvfx/boilerlib/resources/main_window.ui
+include pyvfx/boilerlib/resources/module.ui
+include pyvfx/boilerlib/resources/qpalette_maya2015.json
+include pyvfx/boilerlib/resources/qpalette_maya2016.json
