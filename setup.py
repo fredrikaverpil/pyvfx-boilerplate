@@ -14,7 +14,7 @@ setuptools.setup(
     long_description=long_description,
     long_description_content_type="text/markdown",
     #url="https://github.com/fredrikaverpil/pyvfx-boilerplate",
-    url="https://github.com/nzanepro/pyvfx-boilerplate",
+    url="https://github.com/nzanepro/pyvfx.boilerplate",
     packages=setuptools.find_packages(),
     include_package_data=True,
     scripts=[
