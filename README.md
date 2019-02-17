@@ -7,7 +7,7 @@ A boilerplate for creating PyQt4/PySide and PyQt5/PySide2 applications running i
 
 
 
-### Version ?
+### Version 3.0.0b1
 
 #### Changes from 2.0 (nzanepro fork)
 
