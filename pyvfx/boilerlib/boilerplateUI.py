@@ -155,17 +155,21 @@ def _nuke_set_zero_margins(widget_object):
             if widget_object.__class__.__name__ == child.__class__.__name__:
                 parentWidgetList.append(
                     parent.parentWidget())
-                parentWidgetList.append(
-                    parent.parentWidget().parentWidget())
-                parentWidgetList.append(
-                    parent.parentWidget().parentWidget().parentWidget())
+                try:
+                    parentWidgetList.append(
+                        parent.parentWidget().parentWidget())
+                    parentWidgetList.append(
+                        parent.parentWidget().parentWidget().parentWidget())
+                except AttributeError:
+                    pass
 
                 for sub in parentWidgetList:
-                    for tinychild in sub.children():
-                        try:
-                            tinychild.setContentsMargins(0, 0, 0, 0)
-                        except:
-                            pass
+                    if sub is not None:
+                        for tinychild in sub.children():
+                            try:
+                                tinychild.setContentsMargins(0, 0, 0, 0)
+                            except:
+                                pass
 
 
 # ----------------------------------------------------------------------
