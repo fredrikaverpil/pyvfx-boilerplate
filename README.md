@@ -72,12 +72,12 @@ if __name__ == "__main__":
 
 easy way:
 ```bash
-pip install git+https://github.com/nzanepro/pyvfx-boilerplate
+pip install git+https://github.com/nzanepro/pyvfx.boilerplate
 ```
 long way:
 ```bash
-git clone https://github.com/nzanepro/pyvfx-boilerplate
-cd pyvfx-boilerplate
+git clone https://github.com/nzanepro/pyvfx.boilerplate
+cd pyvfx.boilerplate
 python setup.py sdist bdist_wheel
 pip install dist/*
 ```
@@ -86,18 +86,19 @@ pip install dist/*
 
 #### Example usage
 
-Pip installs a program named `boilerplate` as an example Run as standalone:
+Pip installs a program named `pyvfx.boilerlibUI` as an example Run as standalone:
+(you may need to additionally install PyQt4, PyQt5, PySide or PySide2 for standalone to work depending on your system configuration)
 
 ```bash
-boilerplate
+pyvfx.boilerlibUI
 ```
 
 Run in script editor of Maya or Nuke:
 
 ```python
 import sys
-sys.path.append('/path/to/pyvfx-boilerplate')
-from boilerlib import boilerplateUI
+sys.path.append('/path/to/pyvfx.boilerplate')
+from pyvfx.boilerlib import boilerplateUI
 bpr = boilerplateUI.BoilerplateRunner()
 bpr.run_main()
 ```
@@ -134,7 +135,7 @@ if QtCompat__binding == 'PySide2':
 
 Something wrong, have a question or wish to file a feature request?
 
-Open up an issue [here](https://github.com/fredrikaverpil/pyvfx-boilerplate/issues)!
+Open up an issue [here](https://github.com/nzanepro/pyvfx.boilerplate/issues)!
 
 #### Contribute
 
