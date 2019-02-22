@@ -4,8 +4,8 @@ with open("README.md", "r") as fh:
     long_description = fh.read()
 
 setuptools.setup(
-    name="pyvfx.boilerlib",
-    version="3.0.0b1",
+    name="pyvfx.boilerplate",
+    version="3.0.0",
     # author="Fredrik Averpil",
     # author_email="fredrik@averpil.com",
     author="Zachary Cole",
@@ -18,7 +18,7 @@ setuptools.setup(
     packages=setuptools.find_packages(),
     include_package_data=True,
     scripts=[
-             'bin/pyvfx.boilerlibUI',
+             'bin/pyvfx.boilerplateUI',
              ],
     install_requires=[
                       'Qt.py',

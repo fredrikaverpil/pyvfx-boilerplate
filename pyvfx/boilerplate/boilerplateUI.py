@@ -9,6 +9,8 @@ https://github.com/mottosso/Qt.py
 import sys
 import os
 import platform
+if "QT_PREFERRED_PATH" in os.environ:
+    sys.path.append(os.environ["QT_PREFERRED_PATH"])
 import Qt
 from Qt import QtWidgets  # pylint: disable=E0611
 from Qt import QtCore  # pylint: disable=E0611

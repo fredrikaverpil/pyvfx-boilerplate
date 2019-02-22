@@ -1,4 +1,4 @@
-pyvfx-boilerplate
+pyvfx.boilerplate
 ==================
 
 A boilerplate for creating PyQt4/PySide and PyQt5/PySide2 applications running in Maya, Nuke or completely standalone.
@@ -7,7 +7,7 @@ A boilerplate for creating PyQt4/PySide and PyQt5/PySide2 applications running i
 
 
 
-### Version 3.0.0b1
+### Version 3.0.0
 
 #### Changes from 2.0 (nzanepro fork)
 
@@ -22,7 +22,7 @@ import os
 import platform
 
 from Qt import QtCompat
-from pyvfx.boilerlib import boilerplateUI
+from pyvfx.boilerplate import boilerplateUI
 
 
 class myPlate(boilerplateUI.Boilerplate):
@@ -86,11 +86,11 @@ pip install dist/*
 
 #### Example usage
 
-Pip installs a program named `pyvfx.boilerlibUI` as an example Run as standalone:
+Pip installs a program named `pyvfx.boilerplateUI` as an example Run as standalone:
 (you may need to additionally install PyQt4, PyQt5, PySide or PySide2 for standalone to work depending on your system configuration)
 
 ```bash
-pyvfx.boilerlibUI
+pyvfx.boilerplateUI
 ```
 
 Run in script editor of Maya or Nuke:
@@ -98,7 +98,7 @@ Run in script editor of Maya or Nuke:
 ```python
 import sys
 sys.path.append('/path/to/pyvfx.boilerplate')
-from pyvfx.boilerlib import boilerplateUI
+from pyvfx.boilerplate import boilerplateUI
 bpr = boilerplateUI.BoilerplateRunner()
 bpr.run_main()
 ```

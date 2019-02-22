@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 import sys
 
-import pyvfx.boilerlib.boilerplateUI as bpUI
+import pyvfx.boilerplate.boilerplateUI as bpUI
 
 sys.dont_write_bytecode = True  # Avoid writing .pyc files
 
