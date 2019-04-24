@@ -1,6 +1,4 @@
-import os
-import sys
-
+import pyvfx.boilerplate.boilerplateUI
 try:
     import maya.cmds as cmds
     import pymel.core as pm
@@ -10,14 +8,12 @@ except ImportError:
 
 try:
     import nuke
-    import nukescripts
     NUKE = True
 except ImportError:
     NUKE = False
 
 
 def activate(dockable=False):
-    import pyvfx.boilerplate.boilerplateUI
     bpr = pyvfx.boilerplate.boilerplateUI.BoilerplateRunner(pyvfx.boilerplate.boilerplateUI.Boilerplate)
     bpr.run_main(dockable)
 
@@ -31,10 +27,14 @@ if NUKE:
 
 if MAYA:
     MainMayaWindow = pm.language.melGlobals['gMainWindow']
-    customMenu = pm.menu('pyvfx', parent=MainMayaWindow)
-    pm.menuItem(label="boilerplate UI",
-                command="import pyvfx.boilerplate.menu\npyvfx.boilerplate.menu.activate()",
-                parent=customMenu)
-    pm.menuItem(label="boilerplate UI dockable",
-                command="import pyvfx.boilerplate.menu\npyvfx.boilerplate.menu.activate(True)",
-                parent=customMenu)
+    if not cmds.menu('pyvfxMenuItemRoot', exists=True):
+        cmds.menu("pyvfxMenuItemRoot", label="pyvfx", parent=MainMayaWindow,
+                  tearOff=True, allowOptionBoxes=True)
+
+    cmds.menuItem(label="boilerplate UI",
+                  parent="pyvfxMenuItemRoot", ec=True,
+                  command="import pyvfx.boilerplate.menu\npyvfx.boilerplate.menu.activate()")
+
+    cmds.menuItem(label="boilerplate UI dockable",
+                  parent="pyvfxMenuItemRoot", ec=True,
+                  command="import pyvfx.boilerplate.menu\npyvfx.boilerplate.menu.activate(True)")

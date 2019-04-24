@@ -119,6 +119,14 @@ def _maya_delete_ui(window_title, window_object):
         cmds.deleteUI('MayaWindow|' + window_title)  # Delete docked window
 
 
+def _maya_delete_workspace(window_object):
+    """Delete existing workspace in Maya"""
+    control = window_object + 'WorkspaceControl'
+    if cmds.workspaceControl(control, q=True, exists=True):
+        cmds.workspaceControl(control, e=True, close=True)
+        cmds.deleteUI(control, control=True)
+
+
 def _nuke_delete_ui(window_object):
     """Delete existing UI in Nuke"""
     for obj in QtWidgets.QApplication.allWidgets():
@@ -188,6 +196,7 @@ class BoilerplateRunner():
     def run_maya(self, dockable=False):
         """Run in Maya"""
         _maya_delete_ui(self.window_title, self.window_object)  # Delete any existing existing UI
+        _maya_delete_workspace(self.window_object)  # Delete any existing existing UI
         boil = self.guiClass(_maya_main_window(), self.window_title, self.window_object)
 
         # Makes Maya perform magic which makes the window stay
@@ -197,8 +206,12 @@ class BoilerplateRunner():
 
         if dockable:
             allowed_areas = ['right', 'left']
-            cmds.dockControl(self.window_title, label=self.window_title, area='left',
-                             content=self.window_object, allowedArea=allowed_areas)
+            try:
+                boil.show(dockable=True, floating=False, area='left')
+            except TypeError:
+                cmds.dockControl(self.window_title, label=self.window_title, area='left',
+                                 content=self.window_object, allowedArea=allowed_areas)
+
         else:
             boil.show()  # Show the UI
 
@@ -216,8 +229,6 @@ class BoilerplateRunner():
         """
         _nuke_delete_ui(self.window_object)  # Delete any alrady existing UI
         if dockable:
-            nuke.tprint(self.guiClass.__module__)
-            nuke.tprint(self.guiClass.__name__)
             widgetname = self.guiClass.__module__ + "." + self.guiClass.__name__
             panel = nukescripts.panels.registerWidgetAsPanel(
                 widget=widgetname,  # module_name.Class_name

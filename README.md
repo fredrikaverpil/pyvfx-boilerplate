@@ -7,42 +7,19 @@ A boilerplate for creating PyQt4/PySide and PyQt5/PySide2 applications running i
 
 
 
-### Version 3.0.0
+### Version 3.0.1
 
 #### Changes from 2.0 (nzanepro fork)
 
 - Updated to work with latest Qt.py (1.2.0b2)
 - Tested with maya (2018.4), nuke (11.2v4), and PySide2 (5.11.2)
 - Install via pip and you will get Qt.py installed as a dependency (see below)
+- Allows extension and use of MayaQWidgetDockableMixin in maya (see example repo below)
+- Better Maya menuing via python instead of pymel, pyvfx now has a root menu, and other modules can be added to the menu.
 
-- Example new app via inheritance of Boilerplate:
-```python
-import sys
-import os
-import platform
+- Example new app via inheritance of Boilerplate (includes extension of MayaQWidgetDockableMixin):
 
-from Qt import QtCompat
-from pyvfx.boilerplate import boilerplateUI
-
-
-class myPlate(boilerplateUI.Boilerplate):
-    def __init__(self, parent=None, win_title='defaultTitle', win_object='defaultObject'):
-        super(myPlate, self).__init__(parent, win_title, win_object)
-
-    def setupUi(self):
-        main_window_file = os.path.join('uifile.ui')
-        self.main_widget = QtCompat.load_ui(main_window_file)
-        self.setCentralWidget(self.main_widget)
-        self.main_widget.pushButton.clicked.connect(self.say_hello)
-
-    def say_hello(self):
-        print('Hello world!')
-
-
-if __name__ == "__main__":
-    bpr = boilerplateUI.BoilerplateRunner(guiClass=myPlate, win_title='Myplate', win_object='myPlate')
-    bpr.run_main()
-```
+https://github.com/nzanepro/pyvfx.boilerplateinherited
 
 #### Changes from 1.0
 
