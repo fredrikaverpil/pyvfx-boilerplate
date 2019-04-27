@@ -18,6 +18,7 @@ from Qt import QtCompat
 
 try:
     import maya.cmds as cmds
+    from maya.app.general.mayaMixin import MayaQWidgetDockableMixin
     MAYA = True
 except ImportError:
     MAYA = False
@@ -47,14 +48,15 @@ PALETTE_FILEPATH = os.path.join(
 # ----------------------------------------------------------------------
 
 
-class Boilerplate(QtWidgets.QMainWindow):
-    """Example showing how UI files can be loaded using the same script
-    when taking advantage of the Qt.py module and build-in methods
-    from PySide/PySide2/PyQt4/PyQt5."""
+class _Boilerplate(QtWidgets.QMainWindow):
+    """
+    Don't subclass this directly, subclass Boilerplate without the '_'
+    """
 
     def __init__(self, parent=None,
                  win_title='Boilerplate', win_object='boilerPlate'):
-        super(Boilerplate, self).__init__(parent)
+
+        super(_Boilerplate, self).__init__(parent)
 
         # Set object name and window title
         self.setObjectName(win_object)
@@ -105,6 +107,28 @@ class Boilerplate(QtWidgets.QMainWindow):
         """
         self.module_widget.boilerLabel.setText('Hello world!')
         self.module_widget.boilerLabel.update()
+
+
+if MAYA:
+    class Boilerplate(MayaQWidgetDockableMixin, _Boilerplate):
+        """Example showing how UI files can be loaded using the same script
+        when taking advantage of the Qt.py module and build-in methods
+        from PySide/PySide2/PyQt4/PyQt5."""
+        def __init__(self, parent=None,
+                     win_title='Boilerplate', win_object='boilerPlate'):
+            super(Boilerplate, self).__init__(parent,
+                                              win_title='Boilerplate',
+                                              win_object='boilerPlate')
+else:
+    class Boilerplate(_Boilerplate):
+        """Example showing how UI files can be loaded using the same script
+        when taking advantage of the Qt.py module and build-in methods
+        from PySide/PySide2/PyQt4/PyQt5."""
+        def __init__(self, parent=None,
+                     win_title='Boilerplate', win_object='boilerPlate'):
+            super(Boilerplate, self).__init__(parent,
+                                              win_title='Boilerplate',
+                                              win_object='boilerPlate')
 
 
 # ----------------------------------------------------------------------
