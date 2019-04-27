@@ -9,14 +9,12 @@ https://github.com/mottosso/Qt.py
 import sys
 import os
 import platform
-if "QT_PREFERRED_PATH" in os.environ:
-    sys.path.append(os.environ["QT_PREFERRED_PATH"])
+import mayapalette
+
 import Qt
 from Qt import QtWidgets  # pylint: disable=E0611
 from Qt import QtCore  # pylint: disable=E0611
 from Qt import QtCompat
-
-import mayapalette
 
 try:
     import maya.cmds as cmds
@@ -54,7 +52,8 @@ class Boilerplate(QtWidgets.QMainWindow):
     when taking advantage of the Qt.py module and build-in methods
     from PySide/PySide2/PyQt4/PyQt5."""
 
-    def __init__(self, parent=None, win_title='Boilerplate', win_object='boilerPlate'):
+    def __init__(self, parent=None,
+                 win_title='Boilerplate', win_object='boilerPlate'):
         super(Boilerplate, self).__init__(parent)
 
         # Set object name and window title
@@ -178,7 +177,7 @@ def _nuke_set_zero_margins(widget_object):
                         for tinychild in sub.children():
                             try:
                                 tinychild.setContentsMargins(0, 0, 0, 0)
-                            except:
+                            except AttributeError:
                                 pass
 
 
@@ -187,7 +186,8 @@ def _nuke_set_zero_margins(widget_object):
 # ----------------------------------------------------------------------
 class BoilerplateRunner():
 
-    def __init__(self, guiClass=Boilerplate, win_title='Boilerplate', win_object='boilerPlate'):
+    def __init__(self, guiClass=Boilerplate,
+                 win_title='Boilerplate', win_object='boilerPlate'):
 
         self.guiClass = guiClass
         self.window_title = win_title
@@ -195,9 +195,13 @@ class BoilerplateRunner():
 
     def run_maya(self, dockable=False):
         """Run in Maya"""
-        _maya_delete_ui(self.window_title, self.window_object)  # Delete any existing existing UI
-        _maya_delete_workspace(self.window_object)  # Delete any existing existing UI
-        boil = self.guiClass(_maya_main_window(), self.window_title, self.window_object)
+        # Delete any existing existing UI
+        _maya_delete_ui(self.window_title, self.window_object)
+        # Delete any existing existing workspace
+        _maya_delete_workspace(self.window_object)
+        boil = self.guiClass(_maya_main_window(),
+                             self.window_title,
+                             self.window_object)
 
         # Makes Maya perform magic which makes the window stay
         # on top in OS X and Linux. As an added bonus, it'll
@@ -209,8 +213,11 @@ class BoilerplateRunner():
             try:
                 boil.show(dockable=True, floating=False, area='left')
             except TypeError:
-                cmds.dockControl(self.window_title, label=self.window_title, area='left',
-                                 content=self.window_object, allowedArea=allowed_areas)
+                cmds.dockControl(self.window_title,
+                                 label=self.window_title,
+                                 area='left',
+                                 content=self.window_object,
+                                 allowedArea=allowed_areas)
 
         else:
             boil.show()  # Show the UI
@@ -240,7 +247,9 @@ class BoilerplateRunner():
             boil = panel.customKnob.getObject().widget
             _nuke_set_zero_margins(boil)
         else:
-            boil = self.guiClass(_nuke_main_window(), self.window_title, self.window_object)
+            boil = self.guiClass(_nuke_main_window(),
+                                 self.window_title,
+                                 self.window_object)
             boil.setWindowFlags(QtCore.Qt.Tool)
             boil.show()  # Show the UI
 
@@ -256,7 +265,8 @@ class BoilerplateRunner():
            https://github.com/fredrikaverpil/pyvfx-boilerplate/issues/9
         """
         app = QtWidgets.QApplication(sys.argv)
-        boil = self.guiClass(win_title=self.window_title, win_object=self.window_object)
+        boil = self.guiClass(win_title=self.window_title,
+                             win_object=self.window_object)
         if not (platform.system() == 'Darwin' and
                 (Qt.IsPySide or Qt.IsPyQt4)):
             mayapalette.set_maya_palette_with_tweaks(PALETTE_FILEPATH)

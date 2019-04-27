@@ -5,7 +5,7 @@ with open("README.md", "r") as fh:
 
 setuptools.setup(
     name="pyvfx.boilerplate",
-    version="3.0.1",
+    version="3.1.0",
     # author="Fredrik Averpil",
     # author_email="fredrik@averpil.com",
     author="Zachary Cole",
@@ -16,13 +16,15 @@ setuptools.setup(
     # url="https://github.com/fredrikaverpil/pyvfx-boilerplate",
     url="https://github.com/nzanepro/pyvfx.boilerplate",
     packages=setuptools.find_packages(),
-    include_package_data=True,
     scripts=[
-             'bin/pyvfx.boilerplateUI',
-             ],
+        'bin/pyvfx.boilerplateUI.sh',
+    ],
+    package_data={
+        "pyvfx.boilerplate": ["resources/*.ui", "resources/*.json"],
+    },
     install_requires=[
-                      'Qt.py',
-                        ],
+        'Qt.py',
+    ],
     classifiers=[
         "Programming Language :: Python :: 2.7",
         "License :: OSI Approved :: MIT License",
