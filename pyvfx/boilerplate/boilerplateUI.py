@@ -117,8 +117,8 @@ if MAYA:
         def __init__(self, parent=None,
                      win_title='Boilerplate', win_object='boilerPlate'):
             super(Boilerplate, self).__init__(parent,
-                                              win_title='Boilerplate',
-                                              win_object='boilerPlate')
+                                              win_title=win_title,
+                                              win_object=win_object)
 else:
     class Boilerplate(_Boilerplate):
         """Example showing how UI files can be loaded using the same script
@@ -127,8 +127,8 @@ else:
         def __init__(self, parent=None,
                      win_title='Boilerplate', win_object='boilerPlate'):
             super(Boilerplate, self).__init__(parent,
-                                              win_title='Boilerplate',
-                                              win_object='boilerPlate')
+                                              win_title=win_title,
+                                              win_object=win_object)
 
 
 # ----------------------------------------------------------------------

@@ -5,7 +5,7 @@ with open("README.md", "r") as fh:
 
 setuptools.setup(
     name="pyvfx.boilerplate",
-    version="3.1.0",
+    version="3.1.1",
     # author="Fredrik Averpil",
     # author_email="fredrik@averpil.com",
     author="Zachary Cole",

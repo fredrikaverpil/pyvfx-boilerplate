@@ -7,10 +7,9 @@ import sys
 if "QT_PREFERRED_PATH" in os.environ:
     sys.path.append(os.environ["QT_PREFERRED_PATH"])
 
-import pyvfx.boilerplate.boilerplateUI as bpUI
+import menu
 
 sys.dont_write_bytecode = True  # Avoid writing .pyc files
 
 if __name__ == "__main__":
-    bpr = bpUI.BoilerplateRunner(bpUI.Boilerplate)
-    bpr.run_main()
+    menu.activate()
