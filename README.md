@@ -7,14 +7,14 @@ A boilerplate for creating PyQt4/PySide and PyQt5/PySide2 applications running i
 
 
 
-### Version 3.0.1
+### Version 3.1.0
 
 #### Changes from 2.0 (nzanepro fork)
 
 - Updated to work with latest Qt.py (1.2.0b2)
 - Tested with maya (2018.4), nuke (11.2v4), and PySide2 (5.11.2)
 - Install via pip and you will get Qt.py installed as a dependency (see below)
-- Allows extension and use of MayaQWidgetDockableMixin in maya (see example repo below)
+- Now includes MayaQWidgetDockableMixin in maya
 - Better Maya menuing via python instead of pymel, pyvfx now has a root menu, and other modules can be added to the menu.
 
 - Example new app via inheritance of Boilerplate (includes extension of MayaQWidgetDockableMixin):
