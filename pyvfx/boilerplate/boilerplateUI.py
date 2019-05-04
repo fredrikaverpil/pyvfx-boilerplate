@@ -150,11 +150,21 @@ def _maya_delete_workspace(window_object):
         cmds.deleteUI(control, control=True)
 
 
-def _nuke_delete_ui(window_object):
-    """Delete existing UI in Nuke"""
-    for obj in QtWidgets.QApplication.allWidgets():
-        if obj.objectName() == window_object:
-            obj.deleteLater()
+def _maya_update_workspace(window_object):
+    """Updates existing workspace in Maya"""
+    control = window_object + 'WorkspaceControl'
+    # TODO make this argument controllable
+    if cmds.workspaceControl(control, q=True, exists=True):
+        cmds.workspaceControl(control,
+                              e=True,
+                              restore=True,
+                              retain=True,
+                              # # options below
+                              # dockToMainWindow=("left", -1),
+                              # tabToControl=("ChannelBoxLayerEditor", -1),
+                              # tabToControl=("Outliner", -1),
+                              tabToControl=("AttributeEditor", -1),
+                              )
 
 
 def _maya_main_window():
@@ -163,6 +173,13 @@ def _maya_main_window():
         if obj.objectName() == 'MayaWindow':
             return obj
     raise RuntimeError('Could not find MayaWindow instance')
+
+
+def _nuke_delete_ui(window_object):
+    """Delete existing UI in Nuke"""
+    for obj in QtWidgets.QApplication.allWidgets():
+        if obj.objectName() == window_object:
+            obj.deleteLater()
 
 
 def _nuke_main_window():
@@ -216,37 +233,30 @@ class BoilerplateRunner():
         self.guiClass = guiClass
         self.window_title = win_title
         self.window_object = win_object
+        self.boil = None
 
-    def run_maya(self, dockable=False):
+    def run_maya(self, **kwargs):
         """Run in Maya"""
         # Delete any existing existing UI
         _maya_delete_ui(self.window_title, self.window_object)
         # Delete any existing existing workspace
         _maya_delete_workspace(self.window_object)
-        boil = self.guiClass(_maya_main_window(),
-                             self.window_title,
-                             self.window_object)
+        self.boil = self.guiClass(_maya_main_window(),
+                                  self.window_title,
+                                  self.window_object)
 
         # Makes Maya perform magic which makes the window stay
         # on top in OS X and Linux. As an added bonus, it'll
         # make Maya remember the window position
-        boil.setProperty("saveWindowPref", True)
+        self.boil.setProperty("saveWindowPref", True)
 
-        if dockable:
-            allowed_areas = ['right', 'left']
-            try:
-                boil.show(dockable=True, floating=False, area='left')
-            except TypeError:
-                cmds.dockControl(self.window_title,
-                                 label=self.window_title,
-                                 area='left',
-                                 content=self.window_object,
-                                 allowedArea=allowed_areas)
+        if 'dockable' in kwargs and kwargs['dockable']:
+            kwargs["allowed_areas"] = ['right', 'left']
+        self.boil.show(**kwargs)
+        if 'dockable' in kwargs and kwargs["dockable"]:
+            _maya_update_workspace(self.window_object)
 
-        else:
-            boil.show()  # Show the UI
-
-    def run_nuke(self, dockable=False):
+    def run_nuke(self, **kwargs):
         """Run in Nuke
 
         Note:
@@ -259,7 +269,7 @@ class BoilerplateRunner():
             `boil.ui.setWindowModality(QtCore.Qt.WindowModal)`
         """
         _nuke_delete_ui(self.window_object)  # Delete any alrady existing UI
-        if dockable:
+        if 'dockable' in kwargs and kwargs["dockable"]:
             widgetname = self.guiClass.__module__ + "." + self.guiClass.__name__
             panel = nukescripts.panels.registerWidgetAsPanel(
                 widget=widgetname,  # module_name.Class_name
@@ -268,16 +278,16 @@ class BoilerplateRunner():
                 create=True)
             pane = nuke.getPaneFor('Properties.1')
             panel.addToPane(pane)
-            boil = panel.customKnob.getObject().widget
-            _nuke_set_zero_margins(boil)
+            self.boil = panel.customKnob.getObject().widget
+            _nuke_set_zero_margins(self.boil)
         else:
-            boil = self.guiClass(_nuke_main_window(),
-                                 self.window_title,
-                                 self.window_object)
-            boil.setWindowFlags(QtCore.Qt.Tool)
-            boil.show()  # Show the UI
+            self.boil = self.guiClass(_nuke_main_window(),
+                                      self.window_title,
+                                      self.window_object)
+            self.boil.setWindowFlags(QtCore.Qt.Tool)
+            self.boil.show()  # Show the UI
 
-    def run_standalone(self):
+    def run_standalone(self, **kwargs):
         """Run standalone
 
         Note:
@@ -289,19 +299,19 @@ class BoilerplateRunner():
            https://github.com/fredrikaverpil/pyvfx-boilerplate/issues/9
         """
         app = QtWidgets.QApplication(sys.argv)
-        boil = self.guiClass(win_title=self.window_title,
-                             win_object=self.window_object)
+        self.boil = self.guiClass(win_title=self.window_title,
+                                  win_object=self.window_object)
         if not (platform.system() == 'Darwin' and
                 (Qt.IsPySide or Qt.IsPyQt4)):
             mayapalette.set_maya_palette_with_tweaks(PALETTE_FILEPATH)
-        boil.show()  # Show the UI
+        self.boil.show()  # Show the UI
         sys.exit(app.exec_())
 
-    def run_main(self, dockable=False):
+    def run_main(self, **kwargs):
         """Run appropriate gui"""
         if MAYA:
-            self.run_maya(dockable)
+            self.run_maya(**kwargs)
         elif NUKE:
-            self.run_nuke(dockable)
+            self.run_nuke(**kwargs)
         else:
-            self.run_standalone()
+            self.run_standalone(**kwargs)
