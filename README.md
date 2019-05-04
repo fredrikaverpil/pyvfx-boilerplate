@@ -5,7 +5,10 @@ A boilerplate for creating PyQt4/PySide and PyQt5/PySide2 applications running i
 
 ## Documentation
 
+### Version 3.2.0
 
+- uses kwargs to pass more arguments to the gui show
+- auto docks into attribute editor panel in maya if dockable=True in kwargs
 
 ### Version 3.1.0
 
