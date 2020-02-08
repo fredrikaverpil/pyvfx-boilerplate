@@ -30,8 +30,6 @@ try:
 except ImportError:
     NUKE = False
 
-sys.dont_write_bytecode = True  # Avoid writing .pyc files
-
 # ----------------------------------------------------------------------
 # Configuration
 # ----------------------------------------------------------------------

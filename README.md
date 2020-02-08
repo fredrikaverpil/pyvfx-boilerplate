@@ -5,6 +5,11 @@ A boilerplate for creating PyQt4/PySide and PyQt5/PySide2 applications running i
 
 ## Documentation
 
+### Version 3.2.1
+
+- rearrangement of namespace package location
+- updated to setuptools_scm to handle version numbering
+
 ### Version 3.2.0
 
 - uses kwargs to pass more arguments to the gui show

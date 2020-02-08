@@ -9,7 +9,10 @@ if "QT_PREFERRED_PATH" in os.environ:
 
 import menu
 
-sys.dont_write_bytecode = True  # Avoid writing .pyc files
+
+def main():
+    menu.activate()
+
 
 if __name__ == "__main__":
-    menu.activate()
+    main()
