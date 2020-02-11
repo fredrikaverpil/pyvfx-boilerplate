@@ -9,12 +9,10 @@ https://github.com/mottosso/Qt.py
 import sys
 import os
 import platform
-import mayapalette
+from . import mayapalette
 
 import Qt
-from Qt import QtWidgets  # pylint: disable=E0611
-from Qt import QtCore  # pylint: disable=E0611
-from Qt import QtCompat
+from Qt import QtWidgets, QtCore, QtCompat  # pylint: disable=E0611
 
 try:
     import maya.cmds as cmds
@@ -29,6 +27,25 @@ try:
     NUKE = True
 except ImportError:
     NUKE = False
+
+try:
+    import hou
+    HOUDINI = True
+except ImportError:
+    HOUDINI = False
+
+try:
+    import MaxPlus
+    THREEDSMAX = True
+except ImportError:
+    THREEDSMAX = False
+
+try:
+    import bpy
+    import atexit
+    BLENDER = True
+except ImportError:
+    BLENDER = False
 
 # ----------------------------------------------------------------------
 # Configuration
@@ -117,6 +134,10 @@ if MAYA:
             super(Boilerplate, self).__init__(parent,
                                               win_title=win_title,
                                               win_object=win_object)
+# elif THREEDSMAX:
+#     # https://forums.autodesk.com/t5/3ds-max-programming/3ds-max-2019-qt-dock-widget/td-p/8164550
+#     # https://help.autodesk.com/view/3DSMAX/2019/ENU/?guid=__py_ref_demo_py_side_tool_bar_q_widget_8py_example_html
+#     pass
 else:
     class Boilerplate(_Boilerplate):
         """Example showing how UI files can be loaded using the same script
@@ -220,6 +241,16 @@ def _nuke_set_zero_margins(widget_object):
                                 pass
 
 
+def _houdini_main_window():
+    """Return Houdini's main window"""
+    return hou.ui.mainQtWindow()
+
+
+def _3dsmax_main_window():
+    """Return 3dsmax's main window"""
+    return MaxPlus.GetQMaxMainWindow()
+
+
 # ----------------------------------------------------------------------
 # Run functions
 # ----------------------------------------------------------------------
@@ -285,6 +316,69 @@ class BoilerplateRunner():
             self.boil.setWindowFlags(QtCore.Qt.Tool)
             self.boil.show()  # Show the UI
 
+    def run_houdini(self, **kwargs):
+        """Run in Houdini"""
+        self.boil = self.guiClass(_houdini_main_window(),
+                                  self.window_title,
+                                  self.window_object)
+        self.boil.show()
+
+    def run_3dsmax(self, **kwargs):
+        """Run in 3dsmax"""
+        # https://gist.github.com/mrabito/0f9d1f177a3bea94d33d35b476c88731
+        # dockable?
+        # https://help.autodesk.com/view/3DSMAX/2019/ENU/?guid=__py_ref_demo_py_side_tool_bar_q_widget_8py_example_html
+        self.boil = self.guiClass(_3dsmax_main_window(),
+                                  self.window_title,
+                                  self.window_object)
+        self.boil.show()
+
+    def on_exit_blender(self):
+        """
+        Close BlenderApplication instance on exit
+
+        Returns: None
+
+        """
+        app = QtWidgets.QApplication.instance()
+        if app:
+            app.store_window_geometry()
+            app.quit()
+
+    def on_update_blender(self):
+        # https://github.com/techartorg/bqt
+        app = QtWidgets.QApplication.instance()
+        if app.should_close:
+            bpy.ops.wm.quit_blender({'window': bpy.context.window_manager.windows[0]}, 'INVOKE_DEFAULT')
+
+    def run_blender(self, **kwargs):
+        """Run in Blender"""
+        # mix of code from
+        # https://github.com/friedererdmann/blender_pyside2_example
+        # and
+        # https://github.com/techartorg/bqt
+
+        # TODO add dockable?
+        # https://github.com/cube-creative/guibedos/blob/master/guibedos/blender.py
+        app = QtWidgets.QApplication.instance()
+
+        if not app:
+            # create the first instance
+            app = QtWidgets.QApplication(sys.argv)
+            # modal
+            bpy.app.timers.register(self.on_update_blender, persistent=True)
+
+        atexit.register(self.on_exit_blender)
+
+        self.event_loop = QtCore.QEventLoop()
+        self.boil = self.guiClass(None,
+                                  self.window_title,
+                                  self.window_object)
+        mayapalette.set_maya_palette_with_tweaks(PALETTE_FILEPATH)
+        self.boil.show()
+        # non-modal:
+        # app.exec_()
+
     def run_standalone(self, **kwargs):
         """Run standalone
 
@@ -311,5 +405,11 @@ class BoilerplateRunner():
             self.run_maya(**kwargs)
         elif NUKE:
             self.run_nuke(**kwargs)
+        elif HOUDINI:
+            self.run_houdini(**kwargs)
+        elif THREEDSMAX:
+            self.run_3dsmax(**kwargs)
+        elif BLENDER:
+            self.run_blender(**kwargs)
         else:
             self.run_standalone(**kwargs)

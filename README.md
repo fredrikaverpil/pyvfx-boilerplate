@@ -5,6 +5,22 @@ A boilerplate for creating PyQt4/PySide and PyQt5/PySide2 applications running i
 
 ## Documentation
 
+### Version 3.3.0
+
+- adding Blender, 3DS Max, and Houdini support
+- see below for installing PySide2 into Blender
+
+Ultra Easy Guide To install PySide2 into Blender on macOS:
+
+1) install blender
+2) open blender at least once, and then close blender
+3) open terminal and run the commands below
+```bash
+curl https://bootstrap.pypa.io/get-pip.py -o get-pip.py
+/Applications/Blender.app/Contents/Resources/2.81/python/bin/python3.7m get-pip.py
+/Applications/Blender.app/Contents/Resources/2.81/python/bin/pip install PySide2, pyvfx.boilerplate
+```
+
 ### Version 3.2.1
 
 - rearrangement of namespace package location
