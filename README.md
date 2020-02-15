@@ -7,7 +7,7 @@ A boilerplate for creating PyQt4/PySide and PyQt5/PySide2 applications running i
 
 ### Version 3.3.0
 
-- adding Blender, 3DS Max, and Houdini support
+- adding Blender, 3DS Max, Houdini, and Unreal Engine support
 - see below for installing PySide2 into Blender
 
 Ultra Easy Guide To install PySide2 into Blender on macOS:
@@ -19,6 +19,17 @@ Ultra Easy Guide To install PySide2 into Blender on macOS:
 curl https://bootstrap.pypa.io/get-pip.py -o get-pip.py
 /Applications/Blender.app/Contents/Resources/2.81/python/bin/python3.7m get-pip.py
 /Applications/Blender.app/Contents/Resources/2.81/python/bin/pip install PySide2, pyvfx.boilerplate
+```
+
+Ultra Easy Guide To install PySide into Unreal on Windows:
+
+this currently fails: (testing on 4.24.2)
+1) install Unreal
+2) open a windows cmd or powershell and run the commands below
+```bash
+cd C:/Program Files/Unreal/UE_4.24/Engine/Binaries/ThirdParty/Python/Win64/
+python.exe -m pip install --upgrade pip
+python.exe -m pip install --no-warn-script-location PySide pyvfx.boilerplate
 ```
 
 ### Version 3.2.1

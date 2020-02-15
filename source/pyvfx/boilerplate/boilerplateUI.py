@@ -47,6 +47,13 @@ try:
 except ImportError:
     BLENDER = False
 
+try:
+    import unreal
+    import atexit
+    UNREAL = True
+except ImportError:
+    UNREAL = False
+
 # ----------------------------------------------------------------------
 # Configuration
 # ----------------------------------------------------------------------
@@ -333,6 +340,36 @@ class BoilerplateRunner():
                                   self.window_object)
         self.boil.show()
 
+    def on_exit_unreal(self):
+        app = QtWidgets.QApplication.instance()
+        if app:
+            app.store_window_geometry()
+            app.quit()
+
+    def run_unreal(self, **kwargs):
+        # https://github.com/20tab/UnrealEnginePython
+        # https://forums.unrealengine.com/development-discussion/python-scripting/1674204-dock-qtwidget-to-unreal
+        # https://github.com/AlexQuevillon/UnrealPythonLibrary/blob/master/UnrealProject/UnrealPythonLibrary/Plugins/UnrealPythonLibraryPlugin/Content/Python/PythonLibraries/QtFunctions.py
+        # https://forums.unrealengine.com/unreal-engine/unreal-studio/1526501-how-to-get-the-main-window-of-the-editor-to-parent-qt-or-pyside-application-to-it
+        app = QtWidgets.QApplication.instance()
+
+        if not app:
+            # create the first instance
+            app = QtWidgets.QApplication(sys.argv)
+            app.aboutToQuit.connect(self.on_exit_unreal)
+
+        atexit.register(self.on_exit_unreal)
+
+        self.boil = None
+
+        self.event_loop = QtCore.QEventLoop()
+        self.boil = self.guiClass(None,
+                                  self.window_title,
+                                  self.window_object)
+        mayapalette.set_maya_palette_with_tweaks(PALETTE_FILEPATH)
+        unreal.parent_external_window_to_slate(self.boil.winId())
+        self.boil.show()
+
     def on_exit_blender(self):
         """
         Close BlenderApplication instance on exit
@@ -411,5 +448,7 @@ class BoilerplateRunner():
             self.run_3dsmax(**kwargs)
         elif BLENDER:
             self.run_blender(**kwargs)
+        elif UNREAL:
+            self.run_unreal(**kwargs)
         else:
             self.run_standalone(**kwargs)
