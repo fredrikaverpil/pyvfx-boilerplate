@@ -9,6 +9,7 @@ https://github.com/mottosso/Qt.py
 import sys
 import os
 import platform
+import atexit
 from . import mayapalette
 
 import Qt
@@ -42,14 +43,12 @@ except ImportError:
 
 try:
     import bpy
-    import atexit
     BLENDER = True
 except ImportError:
     BLENDER = False
 
 try:
     import unreal
-    import atexit
     UNREAL = True
 except ImportError:
     UNREAL = False

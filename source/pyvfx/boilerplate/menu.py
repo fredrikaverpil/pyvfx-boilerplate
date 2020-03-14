@@ -1,7 +1,7 @@
 import pyvfx.boilerplate.boilerplateUI
 try:
     import maya.cmds as cmds
-    import pymel.core as pm
+    import maya.mel as mel
     MAYA = True
 except ImportError:
     MAYA = False
@@ -31,6 +31,13 @@ try:
 except ImportError:
     BLENDER = False
 
+try:
+    import unreal
+    UNREAL = True
+except ImportError:
+    UNREAL = False
+
+
 rootMenuName = "pyvfx"
 
 
@@ -49,7 +56,7 @@ if NUKE:
                  "import pyvfx.boilerplate.menu\npyvfx.boilerplate.menu.activate(True)")
 
 elif MAYA:
-    MainMayaWindow = pm.language.melGlobals['gMainWindow']
+    MainMayaWindow = mel.eval("$temp = $gMainWindow")
     if not cmds.menu('pyvfxMenuItemRoot', exists=True):
         cmds.menu("pyvfxMenuItemRoot", label=rootMenuName, parent=MainMayaWindow,
                   tearOff=True, allowOptionBoxes=True)
@@ -64,6 +71,12 @@ elif MAYA:
 
 elif HOUDINI:
     print("add menu code here for Houdini")
+    activate()
+
+elif UNREAL:
+    # http://golaem.com/content/doc/golaem-crowd-documentation/rendering-unreal-engine
+    # https://github.com/AlexQuevillon/UnrealPythonLibrary/tree/master/UnrealProject/UnrealPythonLibrary
+    print("add menu code here for Unreal")
     activate()
 
 elif THREEDSMAX:

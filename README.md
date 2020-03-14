@@ -1,7 +1,7 @@
 pyvfx.boilerplate
 ==================
 
-A boilerplate for creating PyQt4/PySide and PyQt5/PySide2 applications running in Maya, Nuke or completely standalone.
+A boilerplate for creating PyQt4/PySide and PyQt5/PySide2 applications running in Maya, Nuke, Blender, 3DS Max, Houdini, Unreal Engine or completely standalone.
 
 ## Documentation
 
@@ -18,7 +18,7 @@ Ultra Easy Guide To install PySide2 into Blender on macOS:
 ```bash
 curl https://bootstrap.pypa.io/get-pip.py -o get-pip.py
 /Applications/Blender.app/Contents/Resources/2.81/python/bin/python3.7m get-pip.py
-/Applications/Blender.app/Contents/Resources/2.81/python/bin/pip install PySide2, pyvfx.boilerplate
+/Applications/Blender.app/Contents/Resources/2.81/python/bin/pip install PySide2, pyvfx-boilerplate
 ```
 
 Ultra Easy Guide To install PySide into Unreal on Windows:
@@ -29,7 +29,7 @@ this currently fails: (testing on 4.24.2)
 ```bash
 cd C:/Program Files/Unreal/UE_4.24/Engine/Binaries/ThirdParty/Python/Win64/
 python.exe -m pip install --upgrade pip
-python.exe -m pip install --no-warn-script-location PySide pyvfx.boilerplate
+python.exe -m pip install --no-warn-script-location PySide pyvfx-boilerplate
 ```
 
 ### Version 3.2.1
@@ -84,12 +84,12 @@ https://github.com/nzanepro/pyvfx.boilerplateinherited
 
 easy way:
 ```bash
-pip install git+https://github.com/nzanepro/pyvfx.boilerplate
+pip install git+https://github.com/nzanepro/pyvfx-boilerplate
 ```
 long way:
 ```bash
-git clone https://github.com/nzanepro/pyvfx.boilerplate
-cd pyvfx.boilerplate
+git clone https://github.com/nzanepro/pyvfx-boilerplate
+cd pyvfx-boilerplate
 python setup.py sdist bdist_wheel
 pip install dist/*
 ```
@@ -98,18 +98,18 @@ pip install dist/*
 
 #### Example usage
 
-Pip installs a program named `pyvfx.boilerplateUI` as an example Run as standalone:
+Pip installs a program named `pyvfx-boilerplate` as an example Run as standalone:
 (you may need to additionally install PyQt4, PyQt5, PySide or PySide2 for standalone to work depending on your system configuration)
 
 ```bash
-pyvfx.boilerplateUI
+pyvfx-boilerplate
 ```
 
 Run in script editor of Maya or Nuke:
 
 ```python
 import sys
-sys.path.append('/path/to/pyvfx.boilerplate')
+sys.path.append('/path/to/pyvfx-boilerplate')
 from pyvfx.boilerplate import boilerplateUI
 bpr = boilerplateUI.BoilerplateRunner()
 bpr.run_main()

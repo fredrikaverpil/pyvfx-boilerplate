@@ -3,17 +3,14 @@ import setuptools
 with open("README.md", "r") as fh:
     long_description = fh.read()
 
-# original author - Fredrik Averpil
-# original author email - fredrik@averpil.com
-# original url - https://github.com/fredrikaverpil/pyvfx-boilerplate
-name = "pyvfx.boilerplate"
-author = "Zachary Cole"
-author_email = "zcole@nzaneproductions.com"
-url = "https://github.com/nzanepro/pyvfx.boilerplate"
-description = "A boilerplate Py* app that runs inside of Maya, Nuke, python2, or python3"
+name = "pyvfx-boilerplate"
+author = "Fredrik Averpil"
+author_email = "fredrik@averpil.com"
+url = "https://github.com/fredrikaverpil/pyvfx-boilerplate"
+description = "A boilerplate Py* app that runs inside of many dcc apps, python2, or python3"
 package_dir = "source"
 cli_modules = [
-    "pyvfx_boilerplate=pyvfx.boilerplate.cli:main",
+    "pyvfx-boilerplate=pyvfx.boilerplate.cli:main",
 ]
 
 setuptools.setup(
@@ -32,9 +29,7 @@ setuptools.setup(
     entry_points={
         'console_scripts': cli_modules,
     },
-    package_data={
-        "pyvfx.boilerplate": ["resources/*.ui", "resources/*.json"],
-    },
+    include_package_data=True,
     install_requires=[
         'Qt.py',
     ],
