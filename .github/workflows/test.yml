@@ -6,16 +6,16 @@ jobs:
   test:
     runs-on: ubuntu-latest
     strategy:
-        matrix:
-          python-version: ['2.x', '3.x']
+      matrix:
+        python-version: ['2.x', '3.x']
     name: Python ${{ matrix.python-version }} sample
     steps:
       - uses: actions/checkout@v2
       - name: Setup Python
         uses: actions/setup-python@v1
         with:
-            python-version: ${{ matrix.python-version }}
-            architecture: x64
+          python-version: ${{ matrix.python-version }}
+          architecture: x64
 
       - name: Build wheel
         run: |
