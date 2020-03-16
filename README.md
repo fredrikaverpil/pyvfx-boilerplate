@@ -84,11 +84,11 @@ https://github.com/nzanepro/pyvfx.boilerplateinherited
 
 easy way:
 ```bash
-pip install git+https://github.com/nzanepro/pyvfx-boilerplate
+pip install git+https://github.com/fredrikaverpil/pyvfx-boilerplate
 ```
 long way:
 ```bash
-git clone https://github.com/nzanepro/pyvfx-boilerplate
+git clone https://github.com/fredrikaverpil/pyvfx-boilerplate.git
 cd pyvfx-boilerplate
 python setup.py sdist bdist_wheel
 pip install dist/*
@@ -147,7 +147,7 @@ if QtCompat__binding == 'PySide2':
 
 Something wrong, have a question or wish to file a feature request?
 
-Open up an issue [here](https://github.com/nzanepro/pyvfx.boilerplate/issues)!
+Open up an issue [here](https://github.com/fredrikaverpil/pyvfx-boilerplate/issues)!
 
 #### Contribute
 
