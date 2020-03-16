@@ -19,7 +19,7 @@ jobs:
 
       - name: Build wheel
         run: |
-          pip install wheel
+          pip install --upgrade wheel setuptools
           python setup.py bdist_wheel
 
       - run: pip install isort && isort --recursive --diff
