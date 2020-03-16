@@ -1,3 +1,5 @@
+# https://docs.python.org/3/distutils/setupscript.html#additional-meta-data
+
 import setuptools
 
 with open("README.md", "r") as fh:
