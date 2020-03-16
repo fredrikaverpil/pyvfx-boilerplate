@@ -11,19 +11,19 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - name: Set up Python
-      uses: actions/setup-python@v1
+      - name: Setup Python
+        uses: actions/setup-python@v1
+        with:
+          python-version: '3.x'
+          architecture: x64
+
+      - name: Build wheel
+      run: |
+          pip install wheel
+          python setup.py bdist_wheel
+
+      - name: Publish to PyPI
+      uses: pypa/gh-action-pypi-publish@master
       with:
-        python-version: '3.x'
-        architecture: x64
-
-    - name: Build wheel
-    run: |
-      pip install wheel
-      python setup.py bdist_wheel
-
-    - name: Publish to PyPI
-    uses: pypa/gh-action-pypi-publish@master
-    with:
-      user: __token__
-      password: ${{ secrets.pypi_password }}
+        user: __token__
+        password: ${{ secrets.pypi_password }}
