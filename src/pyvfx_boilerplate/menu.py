@@ -1,4 +1,4 @@
-import pyvfx_boilerplate.boilerplateUI
+import pyvfx_boilerplate.boilerplate_ui
 try:
     import maya.cmds as cmds
     import maya.mel as mel
@@ -42,7 +42,7 @@ rootMenuName = "pyvfx"
 
 
 def activate(dockable=False):
-    bpr = pyvfx_boilerplate.boilerplateUI.BoilerplateRunner(pyvfx_boilerplate.boilerplateUI.Boilerplate)
+    bpr = pyvfx_boilerplate.boilerplate_ui.BoilerplateRunner(pyvfx_boilerplate.boilerplate_ui.Boilerplate)
     kwargs = {}
     kwargs["dockable"] = dockable
     bpr.run_main(**kwargs)

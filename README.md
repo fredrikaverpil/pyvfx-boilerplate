@@ -47,8 +47,8 @@ Run in script editor of Maya or Nuke:
 ```python
 import sys
 sys.path.append('/path/to/pyvfx-boilerplate')
-from pyvfx_boilerplate import boilerplateUI
-bpr = boilerplateUI.BoilerplateRunner()
+from pyvfx_boilerplate import boilerplate_ui
+bpr = boilerplate_ui.BoilerplateRunner()
 bpr.run_main()
 ```
 
