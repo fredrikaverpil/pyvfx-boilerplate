@@ -8,7 +8,7 @@ jobs:
     strategy:
       matrix:
         python-version: ['2.x', '3.x']
-    name: Python ${{ matrix.python-version }} sample
+    name: Python ${{ matrix.python-version }}
     steps:
       - uses: actions/checkout@v2
       - name: Setup Python
