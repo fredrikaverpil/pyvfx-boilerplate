@@ -1,2 +1,9 @@
+# Python
 *.pyc
+
+# Folders
+.eggs
+build
+dist
 venv
+
