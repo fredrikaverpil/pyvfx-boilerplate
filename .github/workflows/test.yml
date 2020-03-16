@@ -16,7 +16,7 @@ jobs:
       - name: Install
         run: |
           pip install wheel isort black flake8
-          pip setup.py bdist_wheel
+          python setup.py bdist_wheel
 
       - run: isort --recursive --diff
       - run: run black --check .
