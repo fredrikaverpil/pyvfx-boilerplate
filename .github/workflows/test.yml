@@ -22,4 +22,5 @@ jobs:
 
       - run: isort --recursive --diff
       - run: black --check .
+        if: matrix.python-version == '3.x'
       - run: flake8
