@@ -19,5 +19,5 @@ jobs:
           python setup.py bdist_wheel
 
       - run: isort --recursive --diff
-      - run: run black --check .
-      - run: run flake8
+      - run: black --check .
+      - run: flake8
