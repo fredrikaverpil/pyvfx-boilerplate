@@ -1,4 +1,4 @@
-import pyvfx.boilerplate.boilerplateUI
+import pyvfx_boilerplate.boilerplateUI
 try:
     import maya.cmds as cmds
     import maya.mel as mel
@@ -42,7 +42,7 @@ rootMenuName = "pyvfx"
 
 
 def activate(dockable=False):
-    bpr = pyvfx.boilerplate.boilerplateUI.BoilerplateRunner(pyvfx.boilerplate.boilerplateUI.Boilerplate)
+    bpr = pyvfx_boilerplate.boilerplateUI.BoilerplateRunner(pyvfx_boilerplate.boilerplateUI.Boilerplate)
     kwargs = {}
     kwargs["dockable"] = dockable
     bpr.run_main(**kwargs)
@@ -51,9 +51,9 @@ def activate(dockable=False):
 if NUKE:
     m = nuke.menu("Nuke")
     m.addCommand("{}/boilerplate UI".format(rootMenuName),
-                 "import pyvfx.boilerplate.menu\npyvfx.boilerplate.menu.activate()")
+                 "import pyvfx_boilerplate.menu\npyvfx_boilerplate.menu.activate()")
     m.addCommand("{}/boilerplate UI dockable".format(rootMenuName),
-                 "import pyvfx.boilerplate.menu\npyvfx.boilerplate.menu.activate(True)")
+                 "import pyvfx_boilerplate.menu\npyvfx_boilerplate.menu.activate(True)")
 
 elif MAYA:
     MainMayaWindow = mel.eval("$temp = $gMainWindow")
@@ -63,11 +63,11 @@ elif MAYA:
 
     cmds.menuItem(label="boilerplate UI",
                   parent="pyvfxMenuItemRoot", ec=True,
-                  command="import pyvfx.boilerplate.menu\npyvfx.boilerplate.menu.activate()")
+                  command="import pyvfx_boilerplate.menu\npyvfx_boilerplate.menu.activate()")
 
     cmds.menuItem(label="boilerplate UI dockable",
                   parent="pyvfxMenuItemRoot", ec=True,
-                  command="import pyvfx.boilerplate.menu\npyvfx.boilerplate.menu.activate(True)")
+                  command="import pyvfx_boilerplate.menu\npyvfx_boilerplate.menu.activate(True)")
 
 elif HOUDINI:
     print("add menu code here for Houdini")
@@ -102,8 +102,8 @@ elif BLENDER:
     # https://blenderartists.org/t/creating-a-custom-menu-option/627316/4
 
     class PyvfxBoilerplateActivateOperator(bpy.types.Operator):
-        """ start the pyvfx.boilerplate ui"""
-        bl_idname = "pyvfx.boilerplate_activate"
+        """ start the pyvfx_boilerplate ui"""
+        bl_idname = "pyvfx_boilerplate_activate"
         bl_label = "boilerplate UI"
 
         def execute(self, context):
@@ -117,7 +117,7 @@ elif BLENDER:
         def draw(self, context):
             """ create the pyvfx menu item"""
             layout = self.layout
-            layout.operator("pyvfx.boilerplate_activate")
+            layout.operator("pyvfx_boilerplate_activate")
 
         def menu_draw(self, context):
             """ create the pyvfx top menu"""

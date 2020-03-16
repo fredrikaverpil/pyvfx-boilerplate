@@ -5,10 +5,10 @@ with open("README.md", "r") as fh:
 
 name = "pyvfx-boilerplate"
 url = "https://github.com/fredrikaverpil/pyvfx-boilerplate"
-description = "A boilerplate Py* app that runs inside of many dcc apps, python2, or python3"
-package_dir = "source"
+description = "A boilerplate Py* app that runs inside of many dcc apps, python2, or python3."
+package_dir = "src"
 cli_modules = [
-    "pyvfx-boilerplate=pyvfx.boilerplate.cli:main",
+    "pyvfx-boilerplate=pyvfx_boilerplate.cli:main",
 ]
 
 setuptools.setup(
