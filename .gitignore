@@ -3,6 +3,7 @@
 
 # Folders
 .eggs
+*.egg-info/
 build
 dist
 venv
