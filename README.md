@@ -2,8 +2,6 @@
 
 A boilerplate for creating PyQt4/PySide and PyQt5/PySide2 applications running in Maya, Nuke, Blender, 3DS Max, Houdini, Unreal Engine or completely standalone.
 
-<br>
-
 ## Documentation
 
 ### Version 3.x
@@ -18,9 +16,6 @@ For details, see [CHANGELOG.md](CHANGELOG.md).
 - Does not work with Nuke 10.0v1 on OS X: [#7](https://github.com/fredrikaverpil/pyvfx-boilerplate/issues/7)
 - Maya palette glitchy in standalone mode with PySide/PyQt4 on OS X (disabled by default): [#9](https://github.com/fredrikaverpil/pyvfx-boilerplate/issues/9)
 - Window will not stay on top of Nuke (OS X) without Qt.Tool or Qt.WindowStaysOnTopHint: [#12](https://github.com/fredrikaverpil/pyvfx-boilerplate/issues/12)
-
-<br>
-
 ### Installation
 
 Easy way:
@@ -37,8 +32,6 @@ cd pyvfx-boilerplate
 python setup.py sdist bdist_wheel
 pip install dist/*
 ```
-
-<br>
 
 ### Example usage
 
@@ -59,13 +52,9 @@ bpr = boilerplateUI.BoilerplateRunner()
 bpr.run_main()
 ```
 
-<br>
-
 ### Modifying the boilerplate
 
-- see inheritance example above
-
-<br>
+- See inheritance example above
 
 ### Development guidelines
 
@@ -84,7 +73,6 @@ if QtCompat__binding.startswith('PySide'):
 
 if QtCompat__binding == 'PySide2':
     # Do something if PySide2 is used
-
 ```
 
 ### Issues
