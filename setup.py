@@ -4,8 +4,6 @@ with open("README.md", "r") as fh:
     long_description = fh.read()
 
 name = "pyvfx-boilerplate"
-author = "Fredrik Averpil"
-author_email = "fredrik@averpil.com"
 url = "https://github.com/fredrikaverpil/pyvfx-boilerplate"
 description = "A boilerplate Py* app that runs inside of many dcc apps, python2, or python3"
 package_dir = "source"
@@ -19,7 +17,6 @@ setuptools.setup(
         'local_scheme': 'node-and-timestamp',
     },
     name=name,
-    author_email=author_email,
     description=description,
     long_description=long_description,
     long_description_content_type="text/markdown",
