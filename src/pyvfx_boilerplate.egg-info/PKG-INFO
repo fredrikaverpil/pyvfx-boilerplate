@@ -1,0 +1,101 @@
+Metadata-Version: 2.1
+Name: pyvfx-boilerplate
+Version: 2.0rc5.dev32+gf387cca.d20200316211636
+Summary: A boilerplate Py* app that runs inside of many dcc apps, python2, or python3.
+Home-page: https://github.com/fredrikaverpil/pyvfx-boilerplate
+License: UNKNOWN
+Description: # pyvfx-boilerplate
+        
+        A boilerplate for creating PyQt4/PySide and PyQt5/PySide2 applications running in Maya, Nuke, Blender, 3DS Max, Houdini, Unreal Engine or completely standalone.
+        
+        ## Documentation
+        
+        
+        
+        #### Noteworthy known issues
+        
+        - Does not work with Nuke 10.0v1 on OS X: [#7](https://github.com/fredrikaverpil/pyvfx-boilerplate/issues/7)
+        - Maya palette glitchy in standalone mode with PySide/PyQt4 on OS X (disabled by default): [#9](https://github.com/fredrikaverpil/pyvfx-boilerplate/issues/9)
+        - Window will not stay on top of Nuke (OS X) without Qt.Tool or Qt.WindowStaysOnTopHint: [#12](https://github.com/fredrikaverpil/pyvfx-boilerplate/issues/12)
+        
+        <br>
+        
+        #### Installation
+        
+        easy way:
+        ```bash
+        pip install git+https://github.com/fredrikaverpil/pyvfx-boilerplate
+        ```
+        long way:
+        ```bash
+        git clone https://github.com/fredrikaverpil/pyvfx-boilerplate.git
+        cd pyvfx-boilerplate
+        python setup.py sdist bdist_wheel
+        pip install dist/*
+        ```
+        
+        <br>
+        
+        #### Example usage
+        
+        Pip installs a program named `pyvfx-boilerplate` as an example Run as standalone:
+        (you may need to additionally install PyQt4, PyQt5, PySide or PySide2 for standalone to work depending on your system configuration)
+        
+        ```bash
+        pyvfx-boilerplate
+        ```
+        
+        Run in script editor of Maya or Nuke:
+        
+        ```python
+        import sys
+        sys.path.append('/path/to/pyvfx-boilerplate')
+        from pyvfx.boilerplate import boilerplateUI
+        bpr = boilerplateUI.BoilerplateRunner()
+        bpr.run_main()
+        ```
+        
+        <br>
+        
+        #### Modifying the boilerplate
+        
+        - see inheritance example above
+        
+        <br>
+        
+        #### Development guidelines
+        
+        Since the boilerplate relies on [`Qt.py`](https://github.com/mottosso/Qt.py), you should design your application as if you were designing it for PyQt5/PySide2. This means creating widgets using `QtWidgets` rather than `QtGui`. The `Qt.py` module takes care of the remapping and makes for compatibility with PyQt4/PySide. Read more over at the [`Qt.py` repository](https://github.com/mottosso/Qt.py).
+        
+        Tip: when you cannot rely on `Qt.py`, create an issue (probably over at [`Qt.py`](https://github.com/mottosso/Qt.py)) and/or detect which binding is being used and write some custom code:
+        
+        ```python
+        from Qt import QtCompat
+        
+        if QtCompat.__binding__ in ('PyQt4', 'PySide'):
+            # Do something if PyQt4 or PySide is used
+        
+        if QtCompat__binding.startswith('PySide'):
+            # Do something if PySide or PySide2 is used
+        
+        if QtCompat__binding == 'PySide2':
+            # Do something if PySide2 is used
+        
+        ```
+        
+        #### Issues
+        
+        Something wrong, have a question or wish to file a feature request?
+        
+        Open up an issue [here](https://github.com/fredrikaverpil/pyvfx-boilerplate/issues)!
+        
+        #### Contribute
+        
+        If you wish to contribute, pull requests are more than welcome!
+        
+Platform: UNKNOWN
+Classifier: Programming Language :: Python :: 2.7
+Classifier: Programming Language :: Python :: 3.7
+Classifier: License :: OSI Approved :: MIT License
+Classifier: Operating System :: OS Independent
+Description-Content-Type: text/markdown

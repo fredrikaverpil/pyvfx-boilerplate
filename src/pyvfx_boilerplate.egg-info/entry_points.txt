@@ -1,0 +1,3 @@
+[console_scripts]
+pyvfx-boilerplate = pyvfx_boilerplate.cli:main
+
