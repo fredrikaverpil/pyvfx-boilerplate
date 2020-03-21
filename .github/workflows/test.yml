@@ -1,0 +1,28 @@
+# https://help.github.com/en/actions/language-and-framework-guides/using-python-with-github-actions
+
+on: [push, pull_request]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: ['2.x', '3.x']
+    name: Python ${{ matrix.python-version }}
+    steps:
+      - uses: actions/checkout@v2
+      - name: Setup Python
+        uses: actions/setup-python@v1
+        with:
+          python-version: ${{ matrix.python-version }}
+          architecture: x64
+
+      - name: Build wheel
+        run: |
+          pip install --upgrade wheel setuptools
+          python setup.py bdist_wheel
+
+      - run: pip install isort && isort --recursive --diff
+      - run: pip install black && black --check .
+        if: matrix.python-version == '3.x'
+      - run: pip install flake8 && flake8

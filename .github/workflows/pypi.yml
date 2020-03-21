@@ -1,0 +1,30 @@
+# https://help.github.com/en/actions/language-and-framework-guides/using-python-with-github-actions
+# https://packaging.python.org/guides/publishing-package-distribution-releases-using-github-actions-ci-cd-workflows/
+
+name: Upload Python Package
+
+on:
+  release:
+    types: [created]
+
+jobs:
+  build-and-publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Setup Python
+        uses: actions/setup-python@v1
+        with:
+          python-version: '3.x'
+          architecture: x64
+
+      - name: Build wheel
+        run: |
+          pip install --upgrade wheel setuptools
+          python setup.py bdist_wheel
+
+      - name: Publish to PyPI
+        uses: pypa/gh-action-pypi-publish@master
+        with:
+          user: __token__
+          password: ${{ secrets.pypi_password }}

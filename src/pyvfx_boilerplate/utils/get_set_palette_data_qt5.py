@@ -18,31 +18,31 @@ import json
 from PySide2 import QtGui
 
 
-STYLE = 'plastique'
-GROUPS = ['Disabled', 'Active', 'Inactive', 'Normal']
+STYLE = "plastique"
+GROUPS = ["Disabled", "Active", "Inactive", "Normal"]
 ROLES = [
-        'AlternateBase',
-        'Background',
-        'Base',
-        'Button',
-        'ButtonText',
-        'BrightText',
-        'Dark',
-        'Foreground',
-        'Highlight',
-        'HighlightedText',
-        'Light',
-        'Link',
-        'LinkVisited',
-        'Mid',
-        'Midlight',
-        'Shadow',
-        'ToolTipBase',
-        'ToolTipText',
-        'Text',
-        'Window',
-        'WindowText'
-        ]
+    "AlternateBase",
+    "Background",
+    "Base",
+    "Button",
+    "ButtonText",
+    "BrightText",
+    "Dark",
+    "Foreground",
+    "Highlight",
+    "HighlightedText",
+    "Light",
+    "Link",
+    "LinkVisited",
+    "Mid",
+    "Midlight",
+    "Shadow",
+    "ToolTipBase",
+    "ToolTipText",
+    "Text",
+    "Window",
+    "WindowText",
+]
 
 
 def getPaletteInfo():
@@ -51,17 +51,17 @@ def getPaletteInfo():
     # ColorGroups
     groups = []
     for name in dir(QtGui.QPalette):
-        if isinstance(getattr(QtGui.QPalette,
-                              name), QtGui.QPalette.ColorGroup):
-            if name != 'All' and name != 'NColorGroups' and name != 'Current':
-                print 'ColorGroup: ' + name
+        curr_pallet = getattr(QtGui.QPalette, name)
+        if isinstance(curr_pallet, QtGui.QPalette.ColorGroup):
+            if name != "All" and name != "NColorGroups" and name != "Current":
+                print("ColorGroup: {}".format(name))
                 groups.append(name)
     # ColorRoles
     roles = []
     for name in dir(QtGui.QPalette):
         if isinstance(getattr(QtGui.QPalette, name), QtGui.QPalette.ColorRole):
-            if name != 'NColorRoles' and name != 'NoRole':
-                print 'ColorRole: ' + name
+            if name != "NColorRoles" and name != "NoRole":
+                print("ColorGroup: {}".format(name))
                 roles.append(name)
 
     # build a dict with all the colors
@@ -71,7 +71,7 @@ def getPaletteInfo():
         for group in GROUPS:
             qGrp = getattr(QtGui.QPalette, group)
             qRl = getattr(QtGui.QPalette, role)
-            result['%s:%s' % (role, group)] = palette.color(qGrp, qRl).rgba()
+            result["%s:%s" % (role, group)] = palette.color(qGrp, qRl).rgba()
     return result
 
 
@@ -79,7 +79,7 @@ def setPaletteFromDict(dct):
     palette = QtGui.QPalette()
     for role in ROLES:
         for group in GROUPS:
-            color = QtGui.QColor(dct['%s:%s' % (role, group)])
+            color = QtGui.QColor(dct["%s:%s" % (role, group)])
             qGrp = getattr(QtGui.QPalette, group)
             qRl = getattr(QtGui.QPalette, role)
             palette.setColor(qGrp, qRl, color)
@@ -113,12 +113,12 @@ def setMayaTweaks():
 
 
 def write_json(data):
-    with open('/Users/fredrik/Desktop/qpalette.json', 'w') as outfile:
+    with open("/Users/fredrik/Desktop/qpalette.json", "w") as outfile:
         json.dump(data, outfile)
 
 
 def read_json():
     # read
-    with open('/Users/fredrik/Desktop/qpalette.json', 'r') as handle:
+    with open("/Users/fredrik/Desktop/qpalette.json", "r") as handle:
         data = json.load(handle)
     return data
