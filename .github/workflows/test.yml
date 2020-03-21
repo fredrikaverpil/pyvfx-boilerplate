@@ -1,5 +1,7 @@
 # https://help.github.com/en/actions/language-and-framework-guides/using-python-with-github-actions
 
+name: Tests
+
 on: [push, pull_request]
 
 jobs:
