@@ -23,7 +23,7 @@ For details, see [CHANGELOG.md](CHANGELOG.md).
 Easy way:
 
 ```bash
-pip install git+https://github.com/fredrikaverpil/pyvfx-boilerplate
+pip install pyvfx-boilerplate
 ```
 
 Long way:
