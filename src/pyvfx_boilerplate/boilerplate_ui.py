@@ -436,14 +436,22 @@ class BoilerplateRunner:
         .. _Issue #9:
            https://github.com/fredrikaverpil/pyvfx-boilerplate/issues/9
         """
-        app = QtWidgets.QApplication(sys.argv)
+        extrawin = True
+        app = QtWidgets.QApplication.instance()
+
+        if not app:
+            app = QtWidgets.QApplication(sys.argv)
+            extrawin = False
+
         self.boil = self.guiClass(
             win_title=self.window_title, win_object=self.window_object
         )
         if not (platform.system() == "Darwin" and (Qt.IsPySide or Qt.IsPyQt4)):
             mayapalette.set_maya_palette_with_tweaks(PALETTE_FILEPATH)
         self.boil.show()  # Show the UI
-        sys.exit(app.exec_())
+
+        if not extrawin:
+            sys.exit(app.exec_())
 
     def run_main(self, **kwargs):
         """Run appropriate gui"""
