@@ -1,6 +1,6 @@
 # pyvfx-boilerplate
 
-![.github/workflows/test.yml](https://github.com/fredrikaverpil/pyvfx-boilerplate/workflows/.github/workflows/test.yml/badge.svg)
+![.github/workflows/tests.yml](https://github.com/fredrikaverpil/pyvfx-boilerplate/workflows/.github/workflows/tests.yml/badge.svg)
 
 A boilerplate for creating PyQt4/PySide and PyQt5/PySide2 applications running in Maya, Nuke, Blender, 3DS Max, Houdini, Unreal Engine or completely standalone.
 
