@@ -1,8 +1,7 @@
 # https://help.github.com/en/actions/language-and-framework-guides/using-python-with-github-actions
 # https://packaging.python.org/guides/publishing-package-distribution-releases-using-github-actions-ci-cd-workflows/
 
-name: Upload Python Package
-
+name: PyPI
 on:
   release:
     types: [created]
