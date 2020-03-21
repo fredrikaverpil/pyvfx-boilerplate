@@ -7,7 +7,7 @@ import sys
 if "QT_PREFERRED_PATH" in os.environ:
     sys.path.append(os.environ["QT_PREFERRED_PATH"])
 
-from pyvfx_boilerplate import menu # noqa
+from pyvfx_boilerplate import menu  # noqa
 
 
 def main():

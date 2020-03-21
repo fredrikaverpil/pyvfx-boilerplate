@@ -7,17 +7,15 @@ with open("README.md", "r") as fh:
 
 name = "pyvfx-boilerplate"
 url = "https://github.com/fredrikaverpil/pyvfx-boilerplate"
-description = "A boilerplate Py* app that runs inside of many dcc apps, python2, or python3."
+description = "A boilerplate Qt Py* app that runs in dcc apps, py2, or py3."
 package_dir = "src"
 cli_modules = [
     "pyvfx-boilerplate=pyvfx_boilerplate.cli:main",
 ]
 
 setuptools.setup(
-    setup_requires=['setuptools_scm'],
-    use_scm_version={
-        'local_scheme': 'node-and-timestamp',
-    },
+    setup_requires=["setuptools_scm"],
+    use_scm_version={"local_scheme": "node-and-timestamp"},
     name=name,
     description=description,
     long_description=long_description,
@@ -25,13 +23,9 @@ setuptools.setup(
     url=url,
     packages=setuptools.find_packages(package_dir),
     package_dir={"": package_dir},
-    entry_points={
-        'console_scripts': cli_modules,
-    },
+    entry_points={"console_scripts": cli_modules},
     include_package_data=True,
-    install_requires=[
-        'Qt.py',
-    ],
+    install_requires=["Qt.py"],
     classifiers=[
         "Programming Language :: Python :: 2.7",
         "Programming Language :: Python :: 3.7",

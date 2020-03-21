@@ -18,6 +18,7 @@ from Qt import QtWidgets, QtCore, QtCompat  # pylint: disable=E0611
 try:
     import maya.cmds as cmds
     from maya.app.general.mayaMixin import MayaQWidgetDockableMixin
+
     MAYA = True
 except ImportError:
     MAYA = False
@@ -25,30 +26,35 @@ except ImportError:
 try:
     import nuke
     import nukescripts
+
     NUKE = True
 except ImportError:
     NUKE = False
 
 try:
     import hou
+
     HOUDINI = True
 except ImportError:
     HOUDINI = False
 
 try:
     import MaxPlus
+
     THREEDSMAX = True
 except ImportError:
     THREEDSMAX = False
 
 try:
     import bpy
+
     BLENDER = True
 except ImportError:
     BLENDER = False
 
 try:
     import unreal
+
     UNREAL = True
 except ImportError:
     UNREAL = False
@@ -58,11 +64,12 @@ except ImportError:
 # ----------------------------------------------------------------------
 
 # Full path to where .ui files are stored
-UI_PATH = os.path.join(os.path.dirname(__file__), 'resources')
+UI_PATH = os.path.join(os.path.dirname(__file__), "resources")
 
 # Palette filepath
-PALETTE_FILEPATH = os.path.join(
-    UI_PATH, 'qpalette_maya2016.json')
+PALETTE_FILEPATH = os.path.join(UI_PATH, "qpalette_maya2016.json")
+WTITLE = "Boilerplate"
+WOBJ = "boilerPlate"
 
 # ----------------------------------------------------------------------
 # Main script
@@ -74,8 +81,7 @@ class _Boilerplate(QtWidgets.QMainWindow):
     Don't subclass this directly, subclass Boilerplate without the '_'
     """
 
-    def __init__(self, parent=None,
-                 win_title='Boilerplate', win_object='boilerPlate'):
+    def __init__(self, parent=None, win_title=WTITLE, win_object=WOBJ):
 
         super(_Boilerplate, self).__init__(parent)
 
@@ -96,8 +102,8 @@ class _Boilerplate(QtWidgets.QMainWindow):
 
     def setupUi(self):
         # Filepaths
-        main_window_file = os.path.join(UI_PATH, 'main_window.ui')
-        module_file = os.path.join(UI_PATH, 'module.ui')
+        main_window_file = os.path.join(UI_PATH, "main_window.ui")
+        module_file = os.path.join(UI_PATH, "module.ui")
 
         # Load UIs
         self.main_widget = QtCompat.load_ui(main_window_file)  # Main window UI
@@ -107,10 +113,10 @@ class _Boilerplate(QtWidgets.QMainWindow):
         self.main_widget.boilerVerticalLayout.addWidget(self.module_widget)
 
         # Edit widget which resides in module UI
-        self.module_widget.boilerLabel.setText('Push the button!')
+        self.module_widget.boilerLabel.setText("Push the button!")
 
         # Edit widget which reside in main window UI
-        self.main_widget.boilerPushButton.setText('Push me!')
+        self.main_widget.boilerPushButton.setText("Push me!")
 
         # Set the main widget
         self.setCentralWidget(self.main_widget)
@@ -126,34 +132,38 @@ class _Boilerplate(QtWidgets.QMainWindow):
         """Set the label text.
         The "label" widget resides in the module
         """
-        self.module_widget.boilerLabel.setText('Hello world!')
+        self.module_widget.boilerLabel.setText("Hello world!")
         self.module_widget.boilerLabel.update()
 
 
 if MAYA:
+
     class Boilerplate(MayaQWidgetDockableMixin, _Boilerplate):
         """Example showing how UI files can be loaded using the same script
         when taking advantage of the Qt.py module and build-in methods
         from PySide/PySide2/PyQt4/PyQt5."""
-        def __init__(self, parent=None,
-                     win_title='Boilerplate', win_object='boilerPlate'):
-            super(Boilerplate, self).__init__(parent,
-                                              win_title=win_title,
-                                              win_object=win_object)
+
+        def __init__(self, parent=None, win_title=WTITLE, win_object=WOBJ):
+            super(Boilerplate, self).__init__(
+                parent, win_title=win_title, win_object=win_object
+            )
+
+
 # elif THREEDSMAX:
-#     # https://forums.autodesk.com/t5/3ds-max-programming/3ds-max-2019-qt-dock-widget/td-p/8164550
-#     # https://help.autodesk.com/view/3DSMAX/2019/ENU/?guid=__py_ref_demo_py_side_tool_bar_q_widget_8py_example_html
+#     # https://forums.autodesk.com/t5/3ds-max-programming/3ds-max-2019-qt-dock-widget/td-p/8164550 # noqa
+#     # https://help.autodesk.com/view/3DSMAX/2019/ENU/?guid=__py_ref_demo_py_side_tool_bar_q_widget_8py_example_html # noqa
 #     pass
 else:
+
     class Boilerplate(_Boilerplate):
         """Example showing how UI files can be loaded using the same script
         when taking advantage of the Qt.py module and build-in methods
         from PySide/PySide2/PyQt4/PyQt5."""
-        def __init__(self, parent=None,
-                     win_title='Boilerplate', win_object='boilerPlate'):
-            super(Boilerplate, self).__init__(parent,
-                                              win_title=win_title,
-                                              win_object=win_object)
+
+        def __init__(self, parent=None, win_title=WTITLE, win_object=WOBJ):
+            super(Boilerplate, self).__init__(
+                parent, win_title=win_title, win_object=win_object
+            )
 
 
 # ----------------------------------------------------------------------
@@ -163,13 +173,13 @@ def _maya_delete_ui(window_title, window_object):
     """Delete existing UI in Maya"""
     if cmds.window(window_object, q=True, exists=True):
         cmds.deleteUI(window_object)  # Delete window
-    if cmds.dockControl('MayaWindow|' + window_title, q=True, ex=True):
-        cmds.deleteUI('MayaWindow|' + window_title)  # Delete docked window
+    if cmds.dockControl("MayaWindow|" + window_title, q=True, ex=True):
+        cmds.deleteUI("MayaWindow|" + window_title)  # Delete docked window
 
 
 def _maya_delete_workspace(window_object):
     """Delete existing workspace in Maya"""
-    control = window_object + 'WorkspaceControl'
+    control = window_object + "WorkspaceControl"
     if cmds.workspaceControl(control, q=True, exists=True):
         cmds.workspaceControl(control, e=True, close=True)
         cmds.deleteUI(control, control=True)
@@ -177,27 +187,28 @@ def _maya_delete_workspace(window_object):
 
 def _maya_update_workspace(window_object):
     """Updates existing workspace in Maya"""
-    control = window_object + 'WorkspaceControl'
+    control = window_object + "WorkspaceControl"
     # TODO make this argument controllable
     if cmds.workspaceControl(control, q=True, exists=True):
-        cmds.workspaceControl(control,
-                              e=True,
-                              restore=True,
-                              retain=True,
-                              # # options below
-                              # dockToMainWindow=("left", -1),
-                              # tabToControl=("ChannelBoxLayerEditor", -1),
-                              # tabToControl=("Outliner", -1),
-                              tabToControl=("AttributeEditor", -1),
-                              )
+        cmds.workspaceControl(
+            control,
+            e=True,
+            restore=True,
+            retain=True,
+            # # options below
+            # dockToMainWindow=("left", -1),
+            # tabToControl=("ChannelBoxLayerEditor", -1),
+            # tabToControl=("Outliner", -1),
+            tabToControl=("AttributeEditor", -1),
+        )
 
 
 def _maya_main_window():
     """Return Maya's main window"""
     for obj in QtWidgets.QApplication.instance().topLevelWidgets():
-        if obj.objectName() == 'MayaWindow':
+        if obj.objectName() == "MayaWindow":
             return obj
-    raise RuntimeError('Could not find MayaWindow instance')
+    raise RuntimeError("Could not find MayaWindow instance")
 
 
 def _nuke_delete_ui(window_object):
@@ -210,11 +221,13 @@ def _nuke_delete_ui(window_object):
 def _nuke_main_window():
     """Returns Nuke's main window"""
     for obj in QtWidgets.QApplication.instance().topLevelWidgets():
-        if (obj.inherits('QMainWindow') and
-                obj.metaObject().className() == 'Foundry::UI::DockMainWindow'):
+        if (
+            obj.inherits("QMainWindow")
+            and obj.metaObject().className() == "Foundry::UI::DockMainWindow"
+        ):
             return obj
     else:
-        raise RuntimeError('Could not find DockMainWindow instance')
+        raise RuntimeError("Could not find DockMainWindow instance")
 
 
 def _nuke_set_zero_margins(widget_object):
@@ -228,13 +241,12 @@ def _nuke_set_zero_margins(widget_object):
     for parent in parentApp:
         for child in parent.children():
             if widget_object.__class__.__name__ == child.__class__.__name__:
-                parentWidgetList.append(
-                    parent.parentWidget())
+                parentWidgetList.append(parent.parentWidget())
                 try:
-                    parentWidgetList.append(
-                        parent.parentWidget().parentWidget())
-                    parentWidgetList.append(
-                        parent.parentWidget().parentWidget().parentWidget())
+                    twoup = parent.parentWidget().parentWidget()
+                    parentWidgetList.append(twoup)
+                    threeup = twoup.parentWidget()
+                    parentWidgetList.append(threeup)
                 except AttributeError:
                     pass
 
@@ -260,10 +272,8 @@ def _3dsmax_main_window():
 # ----------------------------------------------------------------------
 # Run functions
 # ----------------------------------------------------------------------
-class BoilerplateRunner():
-
-    def __init__(self, guiClass=Boilerplate,
-                 win_title='Boilerplate', win_object='boilerPlate'):
+class BoilerplateRunner:
+    def __init__(self, guiClass=Boilerplate, win_title=WTITLE, win_object=WOBJ):  # noqa
 
         self.guiClass = guiClass
         self.window_title = win_title
@@ -276,19 +286,19 @@ class BoilerplateRunner():
         _maya_delete_ui(self.window_title, self.window_object)
         # Delete any existing existing workspace
         _maya_delete_workspace(self.window_object)
-        self.boil = self.guiClass(_maya_main_window(),
-                                  self.window_title,
-                                  self.window_object)
+        self.boil = self.guiClass(
+            _maya_main_window(), self.window_title, self.window_object
+        )
 
         # Makes Maya perform magic which makes the window stay
         # on top in OS X and Linux. As an added bonus, it'll
         # make Maya remember the window position
         self.boil.setProperty("saveWindowPref", True)
 
-        if 'dockable' in kwargs and kwargs['dockable']:
-            kwargs["allowed_areas"] = ['right', 'left']
+        if "dockable" in kwargs and kwargs["dockable"]:
+            kwargs["allowed_areas"] = ["right", "left"]
         self.boil.show(**kwargs)
-        if 'dockable' in kwargs and kwargs["dockable"]:
+        if "dockable" in kwargs and kwargs["dockable"]:
             _maya_update_workspace(self.window_object)
 
     def run_nuke(self, **kwargs):
@@ -304,29 +314,32 @@ class BoilerplateRunner():
             `boil.ui.setWindowModality(QtCore.Qt.WindowModal)`
         """
         _nuke_delete_ui(self.window_object)  # Delete any alrady existing UI
-        if 'dockable' in kwargs and kwargs["dockable"]:
-            widgetname = self.guiClass.__module__ + "." + self.guiClass.__name__
+        if "dockable" in kwargs and kwargs["dockable"]:
+            widgetname = ("{}.{}").format(
+                self.guiClass.__module__, self.guiClass.__name__
+            )
             panel = nukescripts.panels.registerWidgetAsPanel(
                 widget=widgetname,  # module_name.Class_name
                 name=self.window_title,
-                id='uk.co.thefoundry.' + self.window_title,
-                create=True)
-            pane = nuke.getPaneFor('Properties.1')
+                id="uk.co.thefoundry." + self.window_title,
+                create=True,
+            )
+            pane = nuke.getPaneFor("Properties.1")
             panel.addToPane(pane)
             self.boil = panel.customKnob.getObject().widget
             _nuke_set_zero_margins(self.boil)
         else:
-            self.boil = self.guiClass(_nuke_main_window(),
-                                      self.window_title,
-                                      self.window_object)
+            self.boil = self.guiClass(
+                _nuke_main_window(), self.window_title, self.window_object
+            )
             self.boil.setWindowFlags(QtCore.Qt.Tool)
             self.boil.show()  # Show the UI
 
     def run_houdini(self, **kwargs):
         """Run in Houdini"""
-        self.boil = self.guiClass(_houdini_main_window(),
-                                  self.window_title,
-                                  self.window_object)
+        self.boil = self.guiClass(
+            _houdini_main_window(), self.window_title, self.window_object
+        )
         self.boil.show()
 
     def run_3dsmax(self, **kwargs):
@@ -334,9 +347,9 @@ class BoilerplateRunner():
         # https://gist.github.com/mrabito/0f9d1f177a3bea94d33d35b476c88731
         # dockable?
         # https://help.autodesk.com/view/3DSMAX/2019/ENU/?guid=__py_ref_demo_py_side_tool_bar_q_widget_8py_example_html
-        self.boil = self.guiClass(_3dsmax_main_window(),
-                                  self.window_title,
-                                  self.window_object)
+        self.boil = self.guiClass(
+            _3dsmax_main_window(), self.window_title, self.window_object
+        )
         self.boil.show()
 
     def on_exit_unreal(self):
@@ -362,9 +375,7 @@ class BoilerplateRunner():
         self.boil = None
 
         self.event_loop = QtCore.QEventLoop()
-        self.boil = self.guiClass(None,
-                                  self.window_title,
-                                  self.window_object)
+        self.boil = self.guiClass(None, self.window_title, self.window_object)
         mayapalette.set_maya_palette_with_tweaks(PALETTE_FILEPATH)
         unreal.parent_external_window_to_slate(self.boil.winId())
         self.boil.show()
@@ -385,7 +396,8 @@ class BoilerplateRunner():
         # https://github.com/techartorg/bqt
         app = QtWidgets.QApplication.instance()
         if app.should_close:
-            bpy.ops.wm.quit_blender({'window': bpy.context.window_manager.windows[0]}, 'INVOKE_DEFAULT')
+            win = bpy.context.window_manager.windows[0]
+            bpy.ops.wm.quit_blender({"window": win}, "INVOKE_DEFAULT")
 
     def run_blender(self, **kwargs):
         """Run in Blender"""
@@ -407,9 +419,7 @@ class BoilerplateRunner():
         atexit.register(self.on_exit_blender)
 
         self.event_loop = QtCore.QEventLoop()
-        self.boil = self.guiClass(None,
-                                  self.window_title,
-                                  self.window_object)
+        self.boil = self.guiClass(None, self.window_title, self.window_object)
         mayapalette.set_maya_palette_with_tweaks(PALETTE_FILEPATH)
         self.boil.show()
         # non-modal:
@@ -427,10 +437,10 @@ class BoilerplateRunner():
            https://github.com/fredrikaverpil/pyvfx-boilerplate/issues/9
         """
         app = QtWidgets.QApplication(sys.argv)
-        self.boil = self.guiClass(win_title=self.window_title,
-                                  win_object=self.window_object)
-        if not (platform.system() == 'Darwin' and
-                (Qt.IsPySide or Qt.IsPyQt4)):
+        self.boil = self.guiClass(
+            win_title=self.window_title, win_object=self.window_object
+        )
+        if not (platform.system() == "Darwin" and (Qt.IsPySide or Qt.IsPyQt4)):
             mayapalette.set_maya_palette_with_tweaks(PALETTE_FILEPATH)
         self.boil.show()  # Show the UI
         sys.exit(app.exec_())

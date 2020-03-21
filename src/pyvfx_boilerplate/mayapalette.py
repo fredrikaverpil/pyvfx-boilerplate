@@ -6,52 +6,52 @@ from Qt import QtWidgets
 
 def set_palette_from_dict(dct):
     """Set palette to current QApplication based on given dictionary"""
-    groups = ['Disabled', 'Active', 'Inactive', 'Normal']
+    groups = ["Disabled", "Active", "Inactive", "Normal"]
     roles = [
-            'AlternateBase',
-            'Background',
-            'Base',
-            'Button',
-            'ButtonText',
-            'BrightText',
-            'Dark',
-            'Foreground',
-            'Highlight',
-            'HighlightedText',
-            'Light',
-            'Link',
-            'LinkVisited',
-            'Mid',
-            'Midlight',
-            'Shadow',
-            'ToolTipBase',
-            'ToolTipText',
-            'Text',
-            'Window',
-            'WindowText'
-            ]
+        "AlternateBase",
+        "Background",
+        "Base",
+        "Button",
+        "ButtonText",
+        "BrightText",
+        "Dark",
+        "Foreground",
+        "Highlight",
+        "HighlightedText",
+        "Light",
+        "Link",
+        "LinkVisited",
+        "Mid",
+        "Midlight",
+        "Shadow",
+        "ToolTipBase",
+        "ToolTipText",
+        "Text",
+        "Window",
+        "WindowText",
+    ]
     palette = QtGui.QPalette()
     for role in roles:
         try:
             for group in groups:
-                color = QtGui.QColor(dct['%s:%s' % (role, group)])
+                color = QtGui.QColor(dct["%s:%s" % (role, group)])
                 qGrp = getattr(QtGui.QPalette, group)
                 qRl = getattr(QtGui.QPalette, role)
                 palette.setColor(qGrp, qRl, color)
-        except:
-            print('Could not use: ' + str(palette))
+        except:  # noqa
+            print("Could not use: " + str(palette))
     try:
         QtWidgets.QApplication.setPalette(palette)
-    except:
-        print('Could not set palette: ' + str(palette))
+    except:  # noqa
+        print("Could not set palette: " + str(palette))
 
 
 def set_style():
     """Set style"""
     available_styles = QtWidgets.QStyleFactory.keys()
-    if 'Fusion' in available_styles:
+    if "Fusion" in available_styles:
         QtWidgets.QApplication.setStyle("Fusion")
-    elif 'Plastique' in available_styles:
+    elif "Plastique" in available_styles:
         QtWidgets.QApplication.setStyle("Plastique")
 
 
@@ -65,10 +65,8 @@ def set_maya_tweaks():
 
     # Create a new palette
     tab_palette = QtGui.QPalette(base_palette)
-    tab_palette.setBrush(QtGui.QPalette.Window,
-                         QtGui.QBrush(LIGHT_COLOR))
-    tab_palette.setBrush(QtGui.QPalette.Button,
-                         QtGui.QBrush(MID_COLOR))
+    tab_palette.setBrush(QtGui.QPalette.Window, QtGui.QBrush(LIGHT_COLOR))
+    tab_palette.setBrush(QtGui.QPalette.Button, QtGui.QBrush(MID_COLOR))
 
     # Define the widgets that needs tweaking
     widget_palettes = {}
@@ -82,7 +80,7 @@ def set_maya_tweaks():
 
 def read_json(filepath):
     """Read given JSON filepath into dictionary"""
-    with open(filepath, 'r') as data_file:
+    with open(filepath, "r") as data_file:
         data = json.load(data_file)
     return data
 
