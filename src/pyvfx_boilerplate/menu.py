@@ -121,7 +121,7 @@ elif BLENDER:
     # https://blenderartists.org/t/creating-a-custom-menu-option/627316/4
 
     class PyvfxBoilerplateActivateOperator(bpy.types.Operator):
-        """ start the pyvfx_boilerplate ui"""
+        """start the pyvfx_boilerplate ui"""
 
         bl_idname = "pyvfx_boilerplate_activate"
         bl_label = "boilerplate UI"
@@ -131,17 +131,17 @@ elif BLENDER:
             return {"FINISHED"}
 
     class TOPBAR_MT_pyvfx_menu(bpy.types.Menu):
-        """ create the pyvfx top menu and pyvfx menu item"""
+        """create the pyvfx top menu and pyvfx menu item"""
 
         bl_label = rootMenuName
 
         def draw(self, context):
-            """ create the pyvfx menu item"""
+            """create the pyvfx menu item"""
             layout = self.layout
             layout.operator("pyvfx_boilerplate_activate")
 
         def menu_draw(self, context):
-            """ create the pyvfx top menu"""
+            """create the pyvfx top menu"""
             self.layout.menu("TOPBAR_MT_pyvfx_menu")
 
     def register():

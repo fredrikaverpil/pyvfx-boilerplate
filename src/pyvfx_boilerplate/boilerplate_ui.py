@@ -6,14 +6,15 @@ More on Qt.py:
 https://github.com/mottosso/Qt.py
 """
 
-import sys
+import atexit
 import os
 import platform
-import atexit
-from . import mayapalette
+import sys
 
 import Qt
-from Qt import QtWidgets, QtCore, QtCompat  # pylint: disable=E0611
+from Qt import QtCompat, QtCore, QtWidgets  # pylint: disable=E0611
+
+from . import mayapalette
 
 try:
     import maya.cmds as cmds

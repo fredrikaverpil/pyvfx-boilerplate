@@ -17,7 +17,6 @@ import json
 
 from PySide import QtGui
 
-
 STYLE = "plastique"
 GROUPS = ["Disabled", "Active", "Inactive", "Normal"]
 ROLES = [

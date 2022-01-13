@@ -1,7 +1,6 @@
 import json
 
-from Qt import QtGui
-from Qt import QtWidgets
+from Qt import QtGui, QtWidgets
 
 
 def set_palette_from_dict(dct):
