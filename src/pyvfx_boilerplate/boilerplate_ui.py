@@ -205,7 +205,7 @@ def _maya_update_workspace(window_object):
 
 def _maya_main_window():
     """Return Maya's main window"""
-    for obj in QtWidgets.QApplication.instance().topLevelWidgets():
+    for obj in QtWidgets.QApplication.topLevelWidgets():
         if obj.objectName() == "MayaWindow":
             return obj
     raise RuntimeError("Could not find MayaWindow instance")
@@ -220,7 +220,7 @@ def _nuke_delete_ui(window_object):
 
 def _nuke_main_window():
     """Returns Nuke's main window"""
-    for obj in QtWidgets.QApplication.instance().topLevelWidgets():
+    for obj in QtWidgets.QApplication.topLevelWidgets():
         if (
             obj.inherits("QMainWindow")
             and obj.metaObject().className() == "Foundry::UI::DockMainWindow"
